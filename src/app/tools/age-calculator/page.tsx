@@ -13,12 +13,29 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Gift } from "lucide-react";
 
+type AgeResult =
+	| null
+	| { error: string }
+	| {
+			years: number;
+			months: number;
+			days: number;
+			totalDays: number;
+			totalWeeks: number;
+			totalMonths: number;
+			totalHours: number;
+			totalMinutes: number;
+			totalSeconds: number;
+			daysToNextBirthday: number;
+			nextBirthday: string;
+	  };
+
 export default function AgeCalculator() {
 	const [birthDate, setBirthDate] = useState("");
 	const [targetDate, setTargetDate] = useState(
 		new Date().toISOString().split("T")[0]
 	);
-	const [ageResult, setAgeResult] = useState<any>(null);
+	const [ageResult, setAgeResult] = useState<AgeResult>(null);
 
 	const calculateAge = () => {
 		if (!birthDate) return;
@@ -194,130 +211,74 @@ export default function AgeCalculator() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							{ageResult?.error ? (
+							{ageResult && "error" in ageResult ? (
 								<div className='bg-red-50 border border-red-200 p-4 rounded-lg'>
 									<p className='text-red-800'>
 										{ageResult.error}
 									</p>
 								</div>
 							) : ageResult ? (
-								<div className='space-y-6'>
-									{/* Main Age Display */}
-									<div className='bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-lg text-center'>
-										<p className='text-sm text-gray-600 mb-2'>
-											You are
-										</p>
-										<p className='text-3xl font-bold text-blue-600 mb-2'>
+								<div className='space-y-4'>
+									<div className='flex items-center gap-4'>
+										<Gift className='w-5 h-5 text-purple-500' />
+										<span className='text-lg font-semibold'>
 											{ageResult.years} years,{" "}
 											{ageResult.months} months,{" "}
 											{ageResult.days} days
-										</p>
-										<p className='text-sm text-gray-600'>
-											old
-										</p>
+										</span>
 									</div>
-
-									{/* Detailed Breakdown */}
 									<div className='grid grid-cols-2 gap-4'>
-										<div className='bg-green-50 p-4 rounded-lg text-center'>
-											<p className='text-sm text-green-600'>
-												Total Days
-											</p>
-											<p className='text-xl font-bold text-green-800'>
-												{ageResult.totalDays.toLocaleString()}
-											</p>
-										</div>
-										<div className='bg-blue-50 p-4 rounded-lg text-center'>
-											<p className='text-sm text-blue-600'>
-												Total Weeks
-											</p>
-											<p className='text-xl font-bold text-blue-800'>
-												{ageResult.totalWeeks.toLocaleString()}
-											</p>
-										</div>
-										<div className='bg-purple-50 p-4 rounded-lg text-center'>
-											<p className='text-sm text-purple-600'>
-												Total Months
-											</p>
-											<p className='text-xl font-bold text-purple-800'>
-												{ageResult.totalMonths}
-											</p>
-										</div>
-										<div className='bg-orange-50 p-4 rounded-lg text-center'>
-											<p className='text-sm text-orange-600'>
-												Total Hours
-											</p>
-											<p className='text-xl font-bold text-orange-800'>
-												{ageResult.totalHours.toLocaleString()}
-											</p>
-										</div>
-									</div>
-
-									{/* Next Birthday */}
-									<div className='bg-yellow-50 p-4 rounded-lg border border-yellow-200'>
-										<div className='flex items-center gap-2 mb-2'>
-											<Gift className='w-5 h-5 text-yellow-600' />
-											<h3 className='font-semibold text-yellow-800'>
-												Next Birthday
-											</h3>
-										</div>
-										<p className='text-yellow-700'>
-											{ageResult.daysToNextBirthday === 0
-												? "🎉 Happy Birthday! Today is your special day!"
-												: `${ageResult.daysToNextBirthday} days until your next birthday (${ageResult.nextBirthday})`}
-										</p>
-									</div>
-
-									{/* Fun Facts */}
-									{birthDate && (
-										<div className='bg-indigo-50 p-4 rounded-lg'>
-											<h3 className='font-semibold text-indigo-800 mb-2'>
-												Fun Facts
-											</h3>
-											<div className='text-sm text-indigo-700 space-y-1'>
-												<p>
-													• Zodiac Sign:{" "}
-													{getZodiacSign(
-														new Date(birthDate)
-													)}
-												</p>
-												<p>
-													• You&apos;ve lived
-													approximately{" "}
-													{Math.floor(
-														ageResult.totalMinutes /
-															1000000
-													)}{" "}
-													million minutes
-												</p>
-												<p>
-													• Day of week born:{" "}
-													{new Date(
-														birthDate
-													).toLocaleDateString(
-														"en-US",
-														{ weekday: "long" }
-													)}
-												</p>
-												<p>
-													• You&apos;ve experienced
-													about{" "}
-													{Math.floor(
-														ageResult.years / 4
-													)}{" "}
-													leap years
-												</p>
+										<div>
+											<Label>Total Days</Label>
+											<div className='text-xl font-bold'>
+												{ageResult.totalDays}
 											</div>
 										</div>
-									)}
+										<div>
+											<Label>Total Weeks</Label>
+											<div className='text-xl font-bold'>
+												{ageResult.totalWeeks}
+											</div>
+										</div>
+										<div>
+											<Label>Total Months</Label>
+											<div className='text-xl font-bold'>
+												{ageResult.totalMonths}
+											</div>
+										</div>
+										<div>
+											<Label>Total Hours</Label>
+											<div className='text-xl font-bold'>
+												{ageResult.totalHours}
+											</div>
+										</div>
+										<div>
+											<Label>Total Minutes</Label>
+											<div className='text-xl font-bold'>
+												{ageResult.totalMinutes}
+											</div>
+										</div>
+										<div>
+											<Label>Total Seconds</Label>
+											<div className='text-xl font-bold'>
+												{ageResult.totalSeconds}
+											</div>
+										</div>
+									</div>
+									<div className='mt-4'>
+										<Label>Next Birthday</Label>
+										<div className='text-lg'>
+											{ageResult.nextBirthday}
+										</div>
+										<div className='text-sm text-gray-600'>
+											{ageResult.daysToNextBirthday} days
+											left
+										</div>
+									</div>
 								</div>
 							) : (
-								<div className='text-center py-12 text-gray-400'>
-									<Calendar className='w-16 h-16 mx-auto mb-4' />
-									<p>
-										Enter your birth date to calculate your
-										age
-									</p>
+								<div className='text-gray-400'>
+									No data yet.
 								</div>
 							)}
 						</CardContent>

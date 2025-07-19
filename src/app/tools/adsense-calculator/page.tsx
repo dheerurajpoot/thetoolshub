@@ -455,9 +455,9 @@ export default function AdSenseCalculator() {
 							averages and your inputs. Actual AdSense revenue can
 							vary significantly based on many factors including
 							content quality, user engagement, seasonal trends,
-							ad inventory, and Google's algorithms. This tool is
-							for educational purposes only and should not be
-							considered as guaranteed earnings projections.
+							ad inventory, and Google&apos;s algorithms. This
+							tool is for educational purposes only and should not
+							be considered as guaranteed earnings projections.
 						</p>
 					</CardContent>
 				</Card>

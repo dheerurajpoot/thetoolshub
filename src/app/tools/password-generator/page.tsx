@@ -26,9 +26,11 @@ export default function PasswordGenerator() {
 	const [includeSymbols, setIncludeSymbols] = useState(false);
 
 	// Helper function to convert CheckedState to boolean
-	const handleCheckboxChange = (setter: React.Dispatch<React.SetStateAction<boolean>>) => (checked: CheckedState) => {
-		setter(checked === true);
-	};
+	const handleCheckboxChange =
+		(setter: React.Dispatch<React.SetStateAction<boolean>>) =>
+		(checked: CheckedState) => {
+			setter(checked === true);
+		};
 
 	const generatePassword = () => {
 		let charset = "";
@@ -149,7 +151,9 @@ export default function PasswordGenerator() {
 									<Checkbox
 										id='uppercase'
 										checked={includeUppercase}
-										onCheckedChange={handleCheckboxChange(setIncludeUppercase)}
+										onCheckedChange={handleCheckboxChange(
+											setIncludeUppercase
+										)}
 									/>
 									<Label htmlFor='uppercase'>
 										Uppercase Letters (A-Z)
@@ -159,7 +163,9 @@ export default function PasswordGenerator() {
 									<Checkbox
 										id='lowercase'
 										checked={includeLowercase}
-										onCheckedChange={handleCheckboxChange(setIncludeLowercase)}
+										onCheckedChange={handleCheckboxChange(
+											setIncludeLowercase
+										)}
 									/>
 									<Label htmlFor='lowercase'>
 										Lowercase Letters (a-z)
@@ -169,7 +175,9 @@ export default function PasswordGenerator() {
 									<Checkbox
 										id='numbers'
 										checked={includeNumbers}
-										onCheckedChange={handleCheckboxChange(setIncludeNumbers)}
+										onCheckedChange={handleCheckboxChange(
+											setIncludeNumbers
+										)}
 									/>
 									<Label htmlFor='numbers'>
 										Numbers (0-9)
@@ -179,7 +187,9 @@ export default function PasswordGenerator() {
 									<Checkbox
 										id='symbols'
 										checked={includeSymbols}
-										onCheckedChange={handleCheckboxChange(setIncludeSymbols)}
+										onCheckedChange={handleCheckboxChange(
+											setIncludeSymbols
+										)}
 									/>
 									<Label htmlFor='symbols'>
 										Symbols (!@#$%^&*)
@@ -212,7 +222,7 @@ export default function PasswordGenerator() {
 									numbers, and symbols
 								</li>
 								<li>
-									• Don't reuse passwords across multiple
+									• Don&apos;t reuse passwords across multiple
 									accounts
 								</li>
 								<li>• Consider using a password manager</li>

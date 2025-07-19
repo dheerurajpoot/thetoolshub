@@ -518,7 +518,7 @@ export default function HomePage() {
 							<div className='mt-2 text-sm text-gray-600'>
 								Found {filteredTools.length} tool
 								{filteredTools.length !== 1 ? "s" : ""} matching
-								"{searchQuery}"
+								&quot;{searchQuery}&quot;
 							</div>
 						)}
 					</div>

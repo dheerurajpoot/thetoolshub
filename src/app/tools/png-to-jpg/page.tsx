@@ -273,7 +273,7 @@ export default function PngToJpgConverter() {
 									<div className='bg-yellow-50 p-3 rounded-lg'>
 										<p className='text-sm text-yellow-800'>
 											<strong>Note:</strong> JPG format
-											doesn't support transparency.
+											doesn&apos;t support transparency.
 											Transparent areas have been replaced
 											with the selected background color.
 										</p>

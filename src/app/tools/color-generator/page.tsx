@@ -35,8 +35,8 @@ export default function ColorPaletteGenerator() {
 		const max = Math.max(r, g, b);
 		const min = Math.min(r, g, b);
 		let h = 0,
-			s = 0,
-			l = (max + min) / 2;
+			s = 0;
+		const l = (max + min) / 2;
 
 		if (max !== min) {
 			const d = max - min;
@@ -416,8 +416,8 @@ export default function ColorPaletteGenerator() {
 								<div className='text-center py-12 text-gray-400'>
 									<Palette className='w-16 h-16 mx-auto mb-4' />
 									<p>
-										Click "Generate Palette" to create
-										colors
+										Click &quot;Generate Palette&quot; to
+										create colors
 									</p>
 								</div>
 							)}

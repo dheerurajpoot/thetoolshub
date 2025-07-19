@@ -118,8 +118,9 @@ export default function PrivacyPage() {
 									is processed entirely in your browser
 								</li>
 								<li>
-									<strong>No Data Storage:</strong> We don't
-									store any content you input into our tools
+									<strong>No Data Storage:</strong> We
+									don&apos;t store any content you input into
+									our tools
 								</li>
 								<li>
 									<strong>Regular Security Audits:</strong> We
