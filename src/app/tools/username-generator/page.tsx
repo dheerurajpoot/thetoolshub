@@ -369,8 +369,8 @@ export default function UsernameGenerator() {
 								<div className='text-center py-12 text-gray-400'>
 									<User className='w-16 h-16 mx-auto mb-4' />
 									<p>
-										Click "Generate Usernames" to see
-										results
+										Click &quot;Generate Usernames&quot; to
+										see results
 									</p>
 								</div>
 							)}

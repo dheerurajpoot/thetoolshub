@@ -234,7 +234,7 @@ export default function WordPressDetector() {
 							WordPress Detection
 						</CardTitle>
 						<CardDescription>
-							Enter a website URL to detect if it's using
+							Enter a website URL to detect if it&apos;s using
 							WordPress and what theme/plugins it uses
 						</CardDescription>
 					</CardHeader>

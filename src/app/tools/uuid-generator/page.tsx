@@ -194,7 +194,7 @@ export default function UUIDGenerator() {
 											With Braces {}
 										</SelectItem>
 										<SelectItem value='quotes'>
-											With Quotes ""
+											With Quotes &quot;&quot;
 										</SelectItem>
 									</SelectContent>
 								</Select>
@@ -272,8 +272,8 @@ export default function UUIDGenerator() {
 								<div className='text-center py-12 text-gray-400'>
 									<Hash className='w-16 h-16 mx-auto mb-4' />
 									<p>
-										Click "Generate UUIDs" to create unique
-										identifiers
+										Click &quot;Generate UUIDs&quot; to
+										create unique identifiers
 									</p>
 								</div>
 							)}
