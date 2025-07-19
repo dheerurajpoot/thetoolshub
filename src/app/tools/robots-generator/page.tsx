@@ -37,7 +37,11 @@ export default function RobotsGenerator() {
 		setUserAgents(userAgents.filter((_, i) => i !== index));
 	};
 
-	const updateUserAgent = (index: number, field: string, value: any) => {
+	const updateUserAgent = <K extends keyof UserAgent>(
+		index: number,
+		field: K,
+		value: UserAgent[K]
+	) => {
 		const updated = [...userAgents];
 		updated[index] = { ...updated[index], [field]: value };
 		setUserAgents(updated);
@@ -426,7 +430,7 @@ export default function RobotsGenerator() {
 								<ol className='text-sm text-blue-700 space-y-1'>
 									<li>
 										1. Upload the robots.txt file to your
-										website's root directory
+										website&apos;s root directory
 									</li>
 									<li>
 										2. Make it accessible at:
@@ -452,7 +456,10 @@ export default function RobotsGenerator() {
 						<div className='grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600'>
 							<ul className='space-y-2'>
 								<li>
-									• <strong>Use "*" for all bots:</strong>{" "}
+									•{" "}
+									<strong>
+										Use &quot;*&quot; for all bots:
+									</strong>{" "}
 									Most common user-agent
 								</li>
 								<li>
