@@ -105,10 +105,9 @@ export default function WordPressDetector() {
 					server: "",
 					lastUpdated: "",
 				});
-				toast.info("Analysis complete!", {
-					description:
-						"This site doesn't appear to be using WordPress.",
-				});
+				toast.success(
+					"This site doesn't appear to be using WordPress."
+				);
 				return;
 			}
 
@@ -199,7 +198,7 @@ export default function WordPressDetector() {
 			};
 
 			setWpInfo(mockInfo);
-			toast.info("WordPress detected!", {
+			toast("WordPress detected!", {
 				description: `Found WordPress ${mockInfo.version} with ${mockInfo.plugins.length} plugins`,
 			});
 		} catch (err) {
