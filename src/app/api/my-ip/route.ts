@@ -22,7 +22,7 @@ interface IPApiResponse {
 	region_code?: string;
 	zip?: string;
 	connection?: { type?: string };
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 interface IPInfo {
@@ -175,46 +175,159 @@ export async function GET(request: NextRequest) {
 				// Check if we got valid data
 				if (data.ip || data.query || data.ipAddress) {
 					// Normalize data from different APIs
+					const cityName =
+						typeof data.cityName === "string"
+							? data.cityName
+							: undefined;
+					const lat =
+						typeof data.lat === "number" ? data.lat : undefined;
+					const lon =
+						typeof data.lon === "number" ? data.lon : undefined;
+					const lng =
+						typeof data.lng === "number" ? data.lng : undefined;
+					const continentName =
+						typeof data.continentName === "string"
+							? data.continentName
+							: undefined;
+					const countryCode =
+						typeof data.countryCode === "string"
+							? data.countryCode
+							: undefined;
+					const regionCode =
+						typeof data.regionCode === "string"
+							? data.regionCode
+							: undefined;
+					const postal =
+						typeof data.postal === "string"
+							? data.postal
+							: undefined;
+					const postalCode =
+						typeof data.postalCode === "string"
+							? data.postalCode
+							: undefined;
+					const connection_type =
+						typeof data.connection_type === "string"
+							? data.connection_type
+							: undefined;
+					const ispName =
+						typeof data.ispName === "string"
+							? data.ispName
+							: undefined;
+					const organization =
+						typeof data.organization === "string"
+							? data.organization
+							: undefined;
+					const as =
+						typeof data.as === "string" ? data.as : undefined;
+
 					ipInfo = {
-						ip: data.ip || data.query || data.ipAddress || clientIP,
+						ip:
+							typeof data.ip === "string"
+								? data.ip
+								: typeof data.query === "string"
+								? data.query
+								: typeof data.ipAddress === "string"
+								? data.ipAddress
+								: clientIP,
 						type:
-							data.type ||
-							data.version ||
-							(data.ip?.includes(":") ? "IPv6" : "IPv4"),
-						country: data.country_name || data.country || "Unknown",
-						region: data.region_name || data.region || "Unknown",
-						city: data.city || data.cityName || "Unknown",
-						latitude: data.latitude || data.lat || 0,
-						longitude: data.longitude || data.lon || data.lng || 0,
-						timezone: data.timezone || data.time_zone || "UTC",
-						isp: data.org || data.isp || data.ispName || "Unknown",
+							typeof data.type === "string"
+								? data.type
+								: typeof data.version === "string"
+								? data.version
+								: typeof data.ip === "string" &&
+								  data.ip.includes(":")
+								? "IPv6"
+								: "IPv4",
+						country:
+							typeof data.country_name === "string"
+								? data.country_name
+								: typeof data.country === "string"
+								? data.country
+								: "Unknown",
+						region:
+							typeof data.region_name === "string"
+								? data.region_name
+								: typeof data.region === "string"
+								? data.region
+								: "Unknown",
+						city:
+							typeof data.city === "string"
+								? data.city
+								: cityName || "Unknown",
+						latitude:
+							typeof data.latitude === "number"
+								? data.latitude
+								: lat !== undefined
+								? lat
+								: 0,
+						longitude:
+							typeof data.longitude === "number"
+								? data.longitude
+								: lon !== undefined
+								? lon
+								: lng !== undefined
+								? lng
+								: 0,
+						timezone:
+							typeof data.timezone === "string"
+								? data.timezone
+								: typeof data.time_zone === "string"
+								? data.time_zone
+								: "UTC",
+						isp:
+							typeof data.org === "string"
+								? data.org
+								: typeof data.isp === "string"
+								? data.isp
+								: ispName || "Unknown",
 						organization:
-							data.org ||
-							data.organization ||
-							data.isp ||
-							"Unknown",
-						asn: data.asn || data.as || "Unknown",
+							typeof data.org === "string"
+								? data.org
+								: organization ||
+								  (typeof data.isp === "string"
+										? data.isp
+										: "Unknown"),
+						asn:
+							typeof data.asn === "string"
+								? data.asn
+								: as || "Unknown",
 						continent:
-							data.continent_name ||
-							data.continent ||
-							data.continentName,
+							typeof data.continent_name === "string"
+								? data.continent_name
+								: typeof data.continent === "string"
+								? data.continent
+								: continentName || undefined,
 						countryCode:
-							data.country_code ||
-							data.countryCode ||
-							data.country,
+							typeof data.country_code === "string"
+								? data.country_code
+								: countryCode ||
+								  (typeof data.country === "string"
+										? data.country
+										: undefined),
 						regionCode:
-							data.region_code || data.regionCode || data.region,
-						zip: data.zip || data.postal || data.postalCode,
+							typeof data.region_code === "string"
+								? data.region_code
+								: regionCode ||
+								  (typeof data.region === "string"
+										? data.region
+										: undefined),
+						zip:
+							typeof data.zip === "string"
+								? data.zip
+								: postal || postalCode || undefined,
 						connection: {
 							type:
-								data.connection?.type ||
-								data.connection_type ||
-								"Unknown",
+								data.connection &&
+								typeof data.connection === "object" &&
+								typeof data.connection.type === "string"
+									? data.connection.type
+									: connection_type || "Unknown",
 							isp:
-								data.org ||
-								data.isp ||
-								data.ispName ||
-								"Unknown",
+								typeof data.org === "string"
+									? data.org
+									: typeof data.isp === "string"
+									? data.isp
+									: ispName || "Unknown",
 						},
 					};
 

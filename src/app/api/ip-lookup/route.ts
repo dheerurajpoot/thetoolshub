@@ -25,7 +25,7 @@ interface IPApiResponse {
 	asn?: string;
 	timezone?: string;
 	connection?: { type?: string };
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 interface IPInfo {

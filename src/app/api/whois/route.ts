@@ -7,9 +7,9 @@ interface WhoisDomainDbResponse {
 		update_date: string;
 		country?: string;
 		NS?: string;
-		[key: string]: any;
+		[key: string]: unknown;
 	}>;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 interface WhoisXmlApiResponse {
 	creationDate?: string;
@@ -21,13 +21,13 @@ interface WhoisXmlApiResponse {
 	whoisServer?: string;
 	admin?: { email?: string };
 	technical?: { email?: string };
-	[key: string]: any;
+	[key: string]: unknown;
 }
 interface IpApiResponse {
 	ip?: string;
 	country_code?: string;
 	country_name?: string;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 interface DNSAnswer {
 	name: string;
