@@ -32,6 +32,12 @@ interface DomainInfo {
 	status: string;
 	nameServers: string[];
 	lastUpdated: string;
+	whoisServer?: string;
+	domainStatus?: string[];
+	registrantOrganization?: string;
+	registrantCountry?: string;
+	adminEmail?: string;
+	techEmail?: string;
 }
 
 export default function DomainAgeChecker() {
@@ -77,54 +83,56 @@ export default function DomainAgeChecker() {
 		}
 	};
 
-	const generateMockDomainInfo = (domain: string): DomainInfo => {
-		// Generate realistic mock data
-		const registrationYear = 1995 + Math.floor(Math.random() * 25);
-		const registrationMonth = Math.floor(Math.random() * 12) + 1;
-		const registrationDay = Math.floor(Math.random() * 28) + 1;
+	const fetchDomainInfo = async (domain: string): Promise<DomainInfo> => {
+		try {
+			const response = await fetch(
+				`/api/whois?domain=${encodeURIComponent(domain)}`,
+				{
+					method: "GET",
+					headers: {
+						Accept: "application/json",
+					},
+					signal: AbortSignal.timeout(15000), // 15 second timeout
+				}
+			);
 
-		const registrationDate = `${registrationYear}-${registrationMonth
-			.toString()
-			.padStart(2, "0")}-${registrationDay.toString().padStart(2, "0")}`;
-		const expirationYear =
-			new Date().getFullYear() + Math.floor(Math.random() * 3) + 1;
-		const expirationDate = `${expirationYear}-${registrationMonth
-			.toString()
-			.padStart(2, "0")}-${registrationDay.toString().padStart(2, "0")}`;
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				throw new Error(
+					errorData.error ||
+						`HTTP ${response.status}: ${response.statusText}`
+				);
+			}
 
-		const registrars = [
-			"GoDaddy.com, LLC",
-			"Namecheap, Inc.",
-			"Google Domains LLC",
-			"Network Solutions, LLC",
-			"Tucows Domains Inc.",
-			"MarkMonitor Inc.",
-			"Amazon Registrar, Inc.",
-			"Cloudflare, Inc.",
-		];
+			const domainData = await response.json();
 
-		const statuses = ["Active", "Registered", "Protected", "Premium"];
+			if (domainData.error) {
+				throw new Error(domainData.error);
+			}
 
-		return {
-			domain,
-			registrationDate,
-			expirationDate,
-			age: calculateAge(registrationDate),
-			registrar:
-				registrars[Math.floor(Math.random() * registrars.length)],
-			status: statuses[Math.floor(Math.random() * statuses.length)],
-			nameServers: [
-				`ns1.${domain}`,
-				`ns2.${domain}`,
-				`ns3.${domain}`,
-				`ns4.${domain}`,
-			],
-			lastUpdated: new Date(
-				Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000
-			)
-				.toISOString()
-				.split("T")[0],
-		};
+			return {
+				domain: domainData.domain,
+				registrationDate: domainData.registrationDate,
+				expirationDate: domainData.expirationDate,
+				age: calculateAge(domainData.registrationDate),
+				registrar: domainData.registrar,
+				status: domainData.status,
+				nameServers: domainData.nameServers,
+				lastUpdated: domainData.lastUpdated,
+				whoisServer: domainData.whoisServer,
+				domainStatus: domainData.domainStatus,
+				registrantOrganization: domainData.registrantOrganization,
+				registrantCountry: domainData.registrantCountry,
+				adminEmail: domainData.adminEmail,
+				techEmail: domainData.techEmail,
+			};
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error
+					? error.message
+					: "Failed to retrieve domain information";
+			throw new Error(errorMessage);
+		}
 	};
 
 	const checkDomainAge = async () => {
@@ -145,22 +153,20 @@ export default function DomainAgeChecker() {
 		setDomainInfo(null);
 
 		try {
-			// Simulate API call delay
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-
-			// Generate mock data (in real implementation, this would be an API call)
-			const info = generateMockDomainInfo(cleanedDomain);
+			const info = await fetchDomainInfo(cleanedDomain);
 			setDomainInfo(info);
 
 			toast.success("Success!", {
 				description: `Domain information retrieved for ${cleanedDomain}`,
 			});
 		} catch (error) {
-			setError(
-				"Failed to retrieve domain information. Please try again."
-			);
+			const errorMessage =
+				error instanceof Error
+					? error.message
+					: "Failed to retrieve domain information. Please try again.";
+			setError(errorMessage);
 			toast.error("Error", {
-				description: "Failed to check domain age",
+				description: errorMessage,
 			});
 		} finally {
 			setIsChecking(false);
@@ -321,27 +327,9 @@ export default function DomainAgeChecker() {
 												</div>
 												<div>
 													<Label className='text-sm font-medium text-gray-500'>
-														Domain Age
-													</Label>
-													<p className='text-lg font-semibold text-blue-600'>
-														{domainInfo.age}
-													</p>
-												</div>
-												<div>
-													<Label className='text-sm font-medium text-gray-500'>
-														Status
-													</Label>
-													<span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800'>
-														{domainInfo.status}
-													</span>
-												</div>
-											</div>
-											<div className='space-y-4'>
-												<div>
-													<Label className='text-sm font-medium text-gray-500'>
 														Registration Date
 													</Label>
-													<p className='text-lg'>
+													<p className='text-lg font-semibold text-blue-600'>
 														{formatDate(
 															domainInfo.registrationDate
 														)}
@@ -349,161 +337,165 @@ export default function DomainAgeChecker() {
 												</div>
 												<div>
 													<Label className='text-sm font-medium text-gray-500'>
-														Expiration Date
+														Domain Age
 													</Label>
-													<p className='text-lg'>
-														{formatDate(
-															domainInfo.expirationDate
-														)}
-													</p>
-													<p className='text-sm text-gray-500'>
-														(
-														{getDaysUntilExpiration(
-															domainInfo.expirationDate
-														)}{" "}
-														days remaining)
+													<p className='text-lg font-semibold text-green-600'>
+														{domainInfo.age}
 													</p>
 												</div>
 												<div>
 													<Label className='text-sm font-medium text-gray-500'>
 														Registrar
 													</Label>
-													<p className='text-lg'>
+													<p className='text-lg font-semibold'>
 														{domainInfo.registrar}
 													</p>
 												</div>
 											</div>
-										</div>
-									</CardContent>
-								</Card>
-
-								{/* Technical Details */}
-								<Card>
-									<CardHeader>
-										<CardTitle className='flex items-center gap-2'>
-											<Shield className='w-5 h-5' />
-											Technical Details
-										</CardTitle>
-									</CardHeader>
-									<CardContent>
-										<div className='space-y-4'>
-											<div>
-												<Label className='text-sm font-medium text-gray-500'>
-													Last Updated
-												</Label>
-												<p>
-													{formatDate(
-														domainInfo.lastUpdated
-													)}
-												</p>
-											</div>
-											<div>
-												<Label className='text-sm font-medium text-gray-500'>
-													Name Servers
-												</Label>
-												<div className='mt-2 space-y-1'>
-													{domainInfo.nameServers.map(
-														(ns, index) => (
-															<p
-																key={index}
-																className='font-mono text-sm bg-gray-100 px-2 py-1 rounded'>
-																{ns}
-															</p>
-														)
-													)}
+											<div className='space-y-4'>
+												<div>
+													<Label className='text-sm font-medium text-gray-500'>
+														Expiration Date
+													</Label>
+													<p className='text-lg font-semibold text-orange-600'>
+														{formatDate(
+															domainInfo.expirationDate
+														)}
+													</p>
+													<p className='text-sm text-gray-500'>
+														{getDaysUntilExpiration(
+															domainInfo.expirationDate
+														)}{" "}
+														days remaining
+													</p>
 												</div>
+												<div>
+													<Label className='text-sm font-medium text-gray-500'>
+														Status
+													</Label>
+													<div className='flex items-center gap-2'>
+														<div className='w-2 h-2 bg-green-500 rounded-full'></div>
+														<p className='text-lg font-semibold text-green-600'>
+															{domainInfo.status}
+														</p>
+													</div>
+												</div>
+												<div>
+													<Label className='text-sm font-medium text-gray-500'>
+														Last Updated
+													</Label>
+													<p className='text-lg font-semibold'>
+														{formatDate(
+															domainInfo.lastUpdated
+														)}
+													</p>
+												</div>
+												{domainInfo.whoisServer && (
+													<div>
+														<Label className='text-sm font-medium text-gray-500'>
+															WHOIS Server
+														</Label>
+														<p className='text-lg font-semibold'>
+															{
+																domainInfo.whoisServer
+															}
+														</p>
+													</div>
+												)}
 											</div>
 										</div>
 									</CardContent>
 								</Card>
 
-								{/* Age Analysis */}
+								{/* Additional Information */}
+								{(domainInfo.registrantOrganization ||
+									domainInfo.registrantCountry ||
+									domainInfo.adminEmail ||
+									domainInfo.techEmail) && (
+									<Card>
+										<CardHeader>
+											<CardTitle className='flex items-center gap-2'>
+												<Shield className='w-5 h-5' />
+												Additional Information
+											</CardTitle>
+										</CardHeader>
+										<CardContent>
+											<div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+												{domainInfo.registrantOrganization && (
+													<div>
+														<Label className='text-sm font-medium text-gray-500'>
+															Registrant
+															Organization
+														</Label>
+														<p className='text-lg font-semibold'>
+															{
+																domainInfo.registrantOrganization
+															}
+														</p>
+													</div>
+												)}
+												{domainInfo.registrantCountry && (
+													<div>
+														<Label className='text-sm font-medium text-gray-500'>
+															Registrant Country
+														</Label>
+														<p className='text-lg font-semibold'>
+															{
+																domainInfo.registrantCountry
+															}
+														</p>
+													</div>
+												)}
+												{domainInfo.adminEmail && (
+													<div>
+														<Label className='text-sm font-medium text-gray-500'>
+															Admin Email
+														</Label>
+														<p className='text-lg font-semibold'>
+															{
+																domainInfo.adminEmail
+															}
+														</p>
+													</div>
+												)}
+												{domainInfo.techEmail && (
+													<div>
+														<Label className='text-sm font-medium text-gray-500'>
+															Tech Email
+														</Label>
+														<p className='text-lg font-semibold'>
+															{
+																domainInfo.techEmail
+															}
+														</p>
+													</div>
+												)}
+											</div>
+										</CardContent>
+									</Card>
+								)}
+
+								{/* Name Servers */}
 								<Card>
 									<CardHeader>
 										<CardTitle className='flex items-center gap-2'>
 											<Clock className='w-5 h-5' />
-											Age Analysis
+											Name Servers
 										</CardTitle>
 									</CardHeader>
 									<CardContent>
-										<div className='space-y-4'>
-											{(() => {
-												const regDate = new Date(
-													domainInfo.registrationDate
-												);
-												const years =
-													new Date().getFullYear() -
-													regDate.getFullYear();
-
-												if (years >= 10) {
-													return (
-														<div className='p-4 bg-green-50 border border-green-200 rounded-lg'>
-															<h4 className='font-semibold text-green-800'>
-																Mature Domain
-															</h4>
-															<p className='text-green-700 text-sm mt-1'>
-																This domain is
-																well-established
-																and likely has
-																good authority
-																and trust
-																signals.
-															</p>
-														</div>
-													);
-												} else if (years >= 5) {
-													return (
-														<div className='p-4 bg-blue-50 border border-blue-200 rounded-lg'>
-															<h4 className='font-semibold text-blue-800'>
-																Established
-																Domain
-															</h4>
-															<p className='text-blue-700 text-sm mt-1'>
-																This domain has
-																been around for
-																a while and
-																should have
-																decent search
-																engine trust.
-															</p>
-														</div>
-													);
-												} else if (years >= 2) {
-													return (
-														<div className='p-4 bg-yellow-50 border border-yellow-200 rounded-lg'>
-															<h4 className='font-semibold text-yellow-800'>
-																Developing
-																Domain
-															</h4>
-															<p className='text-yellow-700 text-sm mt-1'>
-																This domain is
-																building
-																authority.
-																Continue
-																creating quality
-																content for
-																better rankings.
-															</p>
-														</div>
-													);
-												} else {
-													return (
-														<div className='p-4 bg-orange-50 border border-orange-200 rounded-lg'>
-															<h4 className='font-semibold text-orange-800'>
-																New Domain
-															</h4>
-															<p className='text-orange-700 text-sm mt-1'>
-																This is a
-																relatively new
-																domain. Focus on
-																building quality
-																content and
-																backlinks.
-															</p>
-														</div>
-													);
-												}
-											})()}
+										<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+											{domainInfo.nameServers.map(
+												(ns, index) => (
+													<div
+														key={index}
+														className='bg-gray-50 p-3 rounded-lg'>
+														<p className='font-medium text-gray-800'>
+															NS{index + 1}: {ns}
+														</p>
+													</div>
+												)
+											)}
 										</div>
 									</CardContent>
 								</Card>
@@ -513,13 +505,10 @@ export default function DomainAgeChecker() {
 						{!domainInfo && !isChecking && (
 							<Card>
 								<CardContent className='text-center py-12'>
-									<Globe className='w-12 h-12 text-gray-400 mx-auto mb-4' />
-									<h3 className='text-lg font-medium text-gray-900 mb-2'>
-										No Domain Checked Yet
-									</h3>
+									<Globe className='w-16 h-16 text-gray-300 mx-auto mb-4' />
 									<p className='text-gray-500'>
-										Enter a domain name to see its age and
-										registration details
+										Enter a domain name to check its age and
+										registration information
 									</p>
 								</CardContent>
 							</Card>

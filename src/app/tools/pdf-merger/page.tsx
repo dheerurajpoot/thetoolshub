@@ -24,6 +24,7 @@ import {
 	AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import { PDFDocument } from "pdf-lib";
 
 interface PDFFile {
 	id: string;
@@ -127,7 +128,6 @@ export default function PDFMerger() {
 		setMergedFileUrl(null);
 
 		try {
-			// Simulate merging process
 			const progressInterval = setInterval(() => {
 				setProgress((prev) => {
 					if (prev >= 90) {
@@ -138,14 +138,22 @@ export default function PDFMerger() {
 				});
 			}, 300);
 
-			// Simulate merging delay
-			await new Promise((resolve) => setTimeout(resolve, 3000));
-
-			// Create a simulated merged file (in real implementation, this would be actual PDF merging)
-			const mergedBlob = new Blob(
-				files.map((f) => f.file),
-				{ type: "application/pdf" }
-			);
+			// Actually merge PDFs using pdf-lib
+			const mergedPdf = await PDFDocument.create();
+			for (let i = 0; i < files.length; i++) {
+				const file = files[i];
+				const arrayBuffer = await file.file.arrayBuffer();
+				const pdf = await PDFDocument.load(arrayBuffer);
+				const copiedPages = await mergedPdf.copyPages(
+					pdf,
+					pdf.getPageIndices()
+				);
+				copiedPages.forEach((page) => mergedPdf.addPage(page));
+			}
+			const mergedBytes = await mergedPdf.save();
+			const mergedBlob = new Blob([mergedBytes], {
+				type: "application/pdf",
+			});
 			const downloadUrl = URL.createObjectURL(mergedBlob);
 
 			setMergedFileUrl(downloadUrl);

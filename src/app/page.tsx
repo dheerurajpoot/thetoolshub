@@ -112,18 +112,6 @@ const allTools = [
 		href: "/tools/sitemap-generator",
 	},
 	{
-		name: "Open Graph Generator",
-		icon: Globe,
-		category: "SEO",
-		href: "/tools/og-generator",
-	},
-	{
-		name: "Schema Markup Generator",
-		icon: Code,
-		category: "SEO",
-		href: "/tools/schema-generator",
-	},
-	{
 		name: "Hashtag Generator",
 		icon: Hash,
 		category: "SEO",
@@ -160,12 +148,6 @@ const allTools = [
 		icon: Calendar,
 		category: "Calculator",
 		href: "/tools/age-calculator",
-	},
-	{
-		name: "DOB Calculator",
-		icon: Calendar,
-		category: "Calculator",
-		href: "/tools/dob-calculator",
 	},
 	{
 		name: "Unit Converter",
@@ -341,24 +323,6 @@ const allTools = [
 		category: "Image",
 		href: "/tools/png-to-webp",
 	},
-	{
-		name: "PDF to Image Converter",
-		icon: FileImage,
-		category: "Image",
-		href: "/tools/pdf-to-image",
-	},
-	{
-		name: "Image Background Remover",
-		icon: Scissors,
-		category: "Image",
-		href: "/tools/bg-remover",
-	},
-	{
-		name: "Image Filter",
-		icon: Camera,
-		category: "Image",
-		href: "/tools/image-filter",
-	},
 
 	// Developer Tools
 	{
@@ -372,42 +336,6 @@ const allTools = [
 		icon: Code,
 		category: "Developer",
 		href: "/tools/base64",
-	},
-	{
-		name: "URL Encoder/Decoder",
-		icon: Globe,
-		category: "Developer",
-		href: "/tools/url-encoder",
-	},
-	{
-		name: "HTML Encoder/Decoder",
-		icon: Code,
-		category: "Developer",
-		href: "/tools/html-encoder",
-	},
-	{
-		name: "CSS Minifier",
-		icon: Code,
-		category: "Developer",
-		href: "/tools/css-minifier",
-	},
-	{
-		name: "JavaScript Minifier",
-		icon: Code,
-		category: "Developer",
-		href: "/tools/js-minifier",
-	},
-	{
-		name: "SQL Formatter",
-		icon: Database,
-		category: "Developer",
-		href: "/tools/sql-formatter",
-	},
-	{
-		name: "Regex Tester",
-		icon: Code,
-		category: "Developer",
-		href: "/tools/regex-tester",
 	},
 
 	// PDF Tools
@@ -428,12 +356,6 @@ const allTools = [
 		icon: Scissors,
 		category: "PDF",
 		href: "/tools/pdf-splitter",
-	},
-	{
-		name: "PDF to Word",
-		icon: FileText,
-		category: "PDF",
-		href: "/tools/pdf-to-word",
 	},
 ];
 

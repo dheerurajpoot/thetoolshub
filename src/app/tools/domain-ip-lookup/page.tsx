@@ -42,6 +42,11 @@ interface IPInfo {
 	timezone: string;
 	hostingProvider: string;
 	serverType: string;
+	dnsRecords?: Array<{
+		type: number;
+		data: string;
+		ttl: number;
+	}>;
 }
 
 export default function DomainIPLookup() {
@@ -54,14 +59,6 @@ export default function DomainIPLookup() {
 		const domainRegex =
 			/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?\.[a-zA-Z]{2,}$/;
 		return domainRegex.test(domain);
-	};
-
-	const generateMockIP = () => {
-		return `${Math.floor(Math.random() * 255)}.${Math.floor(
-			Math.random() * 255
-		)}.${Math.floor(Math.random() * 255)}.${Math.floor(
-			Math.random() * 255
-		)}`;
 	};
 
 	const lookupDomainIP = async () => {
@@ -86,72 +83,44 @@ export default function DomainIPLookup() {
 		setIpInfo(null);
 
 		try {
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 1500));
+			const response = await fetch(
+				`/api/ip-lookup?domain=${encodeURIComponent(cleanDomain)}`,
+				{
+					method: "GET",
+					headers: {
+						Accept: "application/json",
+					},
+					signal: AbortSignal.timeout(15000), // 15 second timeout
+				}
+			);
 
-			const countries = [
-				"United States",
-				"Germany",
-				"United Kingdom",
-				"Canada",
-				"Netherlands",
-				"France",
-				"Japan",
-				"Singapore",
-			];
-			const cities = [
-				"New York",
-				"San Francisco",
-				"London",
-				"Frankfurt",
-				"Amsterdam",
-				"Toronto",
-				"Tokyo",
-				"Singapore",
-			];
-			const isps = [
-				"Amazon Web Services",
-				"Google Cloud",
-				"Microsoft Azure",
-				"DigitalOcean",
-				"Cloudflare",
-				"Linode",
-			];
-			const serverTypes = [
-				"Apache",
-				"Nginx",
-				"IIS",
-				"LiteSpeed",
-				"Cloudflare",
-			];
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				throw new Error(
+					errorData.error ||
+						`HTTP ${response.status}: ${response.statusText}`
+				);
+			}
 
-			const mockInfo: IPInfo = {
-				domain: cleanDomain,
-				ipAddress: generateMockIP(),
-				ipVersion: "IPv4",
-				location: {
-					country:
-						countries[Math.floor(Math.random() * countries.length)],
-					region: "CA",
-					city: cities[Math.floor(Math.random() * cities.length)],
-					latitude: 37.7749 + (Math.random() - 0.5) * 10,
-					longitude: -122.4194 + (Math.random() - 0.5) * 10,
-				},
-				isp: isps[Math.floor(Math.random() * isps.length)],
-				organization: isps[Math.floor(Math.random() * isps.length)],
-				asn: `AS${Math.floor(Math.random() * 90000) + 10000}`,
-				timezone: "UTC-8",
-				hostingProvider: isps[Math.floor(Math.random() * isps.length)],
-				serverType:
-					serverTypes[Math.floor(Math.random() * serverTypes.length)],
-			};
+			const data = await response.json();
 
-			setIpInfo(mockInfo);
+			if (data.error) {
+				throw new Error(data.error);
+			}
+
+			setIpInfo(data);
 			toast.success("IP information retrieved!", {
 				description: `Found IP details for ${cleanDomain}`,
 			});
 		} catch (err) {
-			setError("Failed to retrieve IP information. Please try again.");
+			const errorMessage =
+				err instanceof Error
+					? err.message
+					: "Failed to retrieve IP information. Please try again.";
+			setError(errorMessage);
+			toast.error("Error", {
+				description: errorMessage,
+			});
 		} finally {
 			setLoading(false);
 		}
@@ -168,6 +137,19 @@ export default function DomainIPLookup() {
 		if (e.key === "Enter") {
 			lookupDomainIP();
 		}
+	};
+
+	const getDNSRecordType = (type: number): string => {
+		const types: { [key: number]: string } = {
+			1: "A",
+			2: "NS",
+			5: "CNAME",
+			6: "SOA",
+			15: "MX",
+			16: "TXT",
+			28: "AAAA",
+		};
+		return types[type] || `Type ${type}`;
 	};
 
 	return (
@@ -290,6 +272,36 @@ export default function DomainIPLookup() {
 										{ipInfo.serverType}
 									</p>
 								</div>
+
+								{ipInfo.dnsRecords &&
+									ipInfo.dnsRecords.length > 0 && (
+										<div>
+											<Label className='text-sm font-medium text-gray-500'>
+												DNS Records
+											</Label>
+											<div className='space-y-2'>
+												{ipInfo.dnsRecords.map(
+													(record, index) => (
+														<div
+															key={index}
+															className='text-sm bg-gray-50 p-2 rounded'>
+															<span className='font-medium'>
+																{getDNSRecordType(
+																	record.type
+																)}
+																:
+															</span>{" "}
+															{record.data}
+															<span className='text-gray-500 ml-2'>
+																(TTL:{" "}
+																{record.ttl}s)
+															</span>
+														</div>
+													)
+												)}
+											</div>
+										</div>
+									)}
 							</CardContent>
 						</Card>
 
@@ -307,6 +319,15 @@ export default function DomainIPLookup() {
 									</Label>
 									<p className='text-lg'>
 										{ipInfo.location.country}
+									</p>
+								</div>
+
+								<div>
+									<Label className='text-sm font-medium text-gray-500'>
+										Region
+									</Label>
+									<p className='text-lg'>
+										{ipInfo.location.region}
 									</p>
 								</div>
 

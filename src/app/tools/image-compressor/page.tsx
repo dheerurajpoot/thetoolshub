@@ -28,6 +28,7 @@ export default function ImageCompressor() {
 	const [compressedSize, setCompressedSize] = useState<number>(0);
 	const [isCompressing, setIsCompressing] = useState(false);
 	const [compressedImage, setCompressedImage] = useState<string>("");
+	const [outputFormat, setOutputFormat] = useState("jpeg");
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,10 +50,6 @@ export default function ImageCompressor() {
 
 		setIsCompressing(true);
 		try {
-			// Simulate compression process
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-
-			// Create a compressed version (simulation)
 			const canvas = document.createElement("canvas");
 			const ctx = canvas.getContext("2d");
 			const img = new Image();
@@ -62,21 +59,39 @@ export default function ImageCompressor() {
 				canvas.height = img.height;
 				ctx?.drawImage(img, 0, 0);
 
+				let mimeType = "image/jpeg";
+				let ext = "jpg";
+				if (outputFormat === "png") {
+					mimeType = "image/png";
+					ext = "png";
+				} else if (outputFormat === "webp") {
+					mimeType = "image/webp";
+					ext = "webp";
+				}
+
 				const compressedDataUrl = canvas.toDataURL(
-					"image/jpeg",
-					quality[0] / 100
+					mimeType,
+					outputFormat === "jpeg" || outputFormat === "webp"
+						? quality[0] / 100
+						: undefined
 				);
 				setCompressedImage(compressedDataUrl);
 
-				// Estimate compressed size
-				const estimatedSize = Math.floor(
-					originalSize * (quality[0] / 100) * 0.8
+				// Calculate real compressed size from base64
+				const base64 = compressedDataUrl.split(",")[1];
+				const realSize = Math.floor(
+					(base64.length * 3) / 4 -
+						(base64.endsWith("==")
+							? 2
+							: base64.endsWith("=")
+							? 1
+							: 0)
 				);
-				setCompressedSize(estimatedSize);
+				setCompressedSize(realSize);
 
 				toast.success("Compression Complete", {
 					description: `Image compressed successfully! Size reduced by ${Math.round(
-						((originalSize - estimatedSize) / originalSize) * 100
+						((originalSize - realSize) / originalSize) * 100
 					)}%`,
 				});
 			};
@@ -93,8 +108,11 @@ export default function ImageCompressor() {
 
 	const downloadCompressed = () => {
 		if (compressedImage) {
+			const ext = outputFormat === "jpeg" ? "jpg" : outputFormat;
 			const link = document.createElement("a");
-			link.download = `compressed_${selectedFile?.name || "image.jpg"}`;
+			link.download = `compressed_${
+				selectedFile?.name.replace(/\.[^.]+$/, "") || "image"
+			}.${ext}`;
 			link.href = compressedImage;
 			link.click();
 		}
@@ -172,6 +190,27 @@ export default function ImageCompressor() {
 									</div>
 								</div>
 							)}
+
+							{/* Output Format */}
+							<div className='space-y-2'>
+								<Label>Output Format</Label>
+								<select
+									value={outputFormat}
+									onChange={(e) =>
+										setOutputFormat(e.target.value)
+									}
+									className='w-full border rounded p-2'>
+									<option value='jpeg'>
+										JPEG (Best for photos)
+									</option>
+									<option value='png'>
+										PNG (Best for graphics)
+									</option>
+									<option value='webp'>
+										WebP (Modern, best compression)
+									</option>
+								</select>
+							</div>
 
 							{/* Quality Slider */}
 							<div className='space-y-3'>

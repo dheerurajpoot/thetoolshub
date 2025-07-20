@@ -733,7 +733,7 @@ This document was last updated on ${currentDate}.`;
 									<Textarea
 										value={generatedTerms}
 										readOnly
-										className='font-mono text-sm min-h-[600px]'
+										className='font-mono text-sm h-96'
 									/>
 								</CardContent>
 							</Card>

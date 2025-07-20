@@ -26,78 +26,76 @@ interface IPDetails {
 	vpn: boolean;
 	tor: boolean;
 	hosting: boolean;
+	continent?: string;
+	countryCode?: string;
+	regionCode?: string;
+	zip?: string;
+	connection?: {
+		type: string;
+		isp: string;
+	};
 }
 
 export default function MyIPAddress() {
 	const [ipDetails, setIpDetails] = useState<IPDetails | null>(null);
 	const [loading, setLoading] = useState(true);
-
-	const generateMockIP = () => {
-		return `${Math.floor(Math.random() * 255)}.${Math.floor(
-			Math.random() * 255
-		)}.${Math.floor(Math.random() * 255)}.${Math.floor(
-			Math.random() * 255
-		)}`;
-	};
+	const [error, setError] = useState("");
 
 	const fetchIPDetails = async () => {
 		setLoading(true);
+		setError("");
 		try {
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 1500));
-
-			const countries = [
-				"United States",
-				"Canada",
-				"United Kingdom",
-				"Germany",
-				"France",
-				"Australia",
-				"Japan",
-			];
-			const cities = [
-				"New York",
-				"Los Angeles",
-				"London",
-				"Toronto",
-				"Berlin",
-				"Paris",
-				"Sydney",
-				"Tokyo",
-			];
-			const isps = [
-				"Comcast",
-				"Verizon",
-				"AT&T",
-				"Charter Communications",
-				"Cox Communications",
-				"Spectrum",
-			];
-
-			const mockDetails: IPDetails = {
-				ip: generateMockIP(),
-				type: Math.random() > 0.8 ? "IPv6" : "IPv4",
-				location: {
-					country:
-						countries[Math.floor(Math.random() * countries.length)],
-					region: "CA",
-					city: cities[Math.floor(Math.random() * cities.length)],
-					latitude: 37.7749 + (Math.random() - 0.5) * 10,
-					longitude: -122.4194 + (Math.random() - 0.5) * 10,
-					timezone: "America/Los_Angeles",
+			const response = await fetch("/api/my-ip", {
+				method: "GET",
+				headers: {
+					Accept: "application/json",
 				},
-				isp: isps[Math.floor(Math.random() * isps.length)],
-				organization: isps[Math.floor(Math.random() * isps.length)],
-				asn: `AS${Math.floor(Math.random() * 90000) + 10000}`,
-				proxy: Math.random() > 0.9,
-				vpn: Math.random() > 0.8,
-				tor: Math.random() > 0.95,
-				hosting: Math.random() > 0.85,
-			};
+				signal: AbortSignal.timeout(20000), // Increased timeout to 20 seconds
+			});
 
-			setIpDetails(mockDetails);
-		} catch (error) {
-			toast("Failed to fetch IP details");
+			if (!response.ok) {
+				const errorData = await response.json().catch(() => ({}));
+				throw new Error(
+					errorData.error ||
+						`HTTP ${response.status}: ${response.statusText}`
+				);
+			}
+
+			const data = await response.json();
+
+			if (data.error) {
+				throw new Error(data.error);
+			}
+
+			// Check if we got meaningful data
+			const hasLocationData =
+				data.location &&
+				data.location.country &&
+				data.location.country !== "Unknown";
+			const hasNetworkData = data.isp && data.isp !== "Unknown";
+
+			if (!hasLocationData && !hasNetworkData) {
+				toast.warning("Limited data available", {
+					description:
+						"Some IP information could not be retrieved due to API limitations.",
+				});
+			}
+
+			setIpDetails(data);
+			toast.success("IP information retrieved!", {
+				description: hasLocationData
+					? "Your IP details have been loaded successfully."
+					: "Basic IP information loaded.",
+			});
+		} catch (err) {
+			const errorMessage =
+				err instanceof Error
+					? err.message
+					: "Failed to fetch IP details. Please try again.";
+			setError(errorMessage);
+			toast.error("Error", {
+				description: errorMessage,
+			});
 		} finally {
 			setLoading(false);
 		}
@@ -134,9 +132,28 @@ export default function MyIPAddress() {
 						<CardContent className='flex items-center justify-center py-12'>
 							<div className='text-center'>
 								<Globe className='w-12 h-12 mx-auto mb-4 animate-spin text-blue-500' />
-								<p className='text-gray-600'>
+								<p className='text-gray-600 mb-2'>
 									Detecting your IP address...
 								</p>
+								<p className='text-sm text-gray-500'>
+									This may take a few seconds as we query
+									multiple services
+								</p>
+							</div>
+						</CardContent>
+					</Card>
+				) : error ? (
+					<Card>
+						<CardContent className='flex items-center justify-center py-12'>
+							<div className='text-center'>
+								<Shield className='w-12 h-12 mx-auto mb-4 text-red-500' />
+								<p className='text-red-600 mb-4'>{error}</p>
+								<Button
+									onClick={fetchIPDetails}
+									variant='outline'>
+									<RefreshCw className='w-4 h-4 mr-2' />
+									Try Again
+								</Button>
 							</div>
 						</CardContent>
 					</Card>
@@ -219,6 +236,18 @@ export default function MyIPAddress() {
 										</p>
 									</div>
 
+									{ipDetails.zip &&
+										ipDetails.zip !== "Unknown" && (
+											<div>
+												<Label className='text-sm font-medium text-gray-500'>
+													ZIP Code
+												</Label>
+												<p className='text-lg'>
+													{ipDetails.zip}
+												</p>
+											</div>
+										)}
+
 									<div>
 										<Label className='text-sm font-medium text-gray-500'>
 											Coordinates
@@ -242,6 +271,18 @@ export default function MyIPAddress() {
 											{ipDetails.location.timezone}
 										</p>
 									</div>
+
+									{ipDetails.continent &&
+										ipDetails.continent !== "Unknown" && (
+											<div>
+												<Label className='text-sm font-medium text-gray-500'>
+													Continent
+												</Label>
+												<p className='text-lg'>
+													{ipDetails.continent}
+												</p>
+											</div>
+										)}
 								</CardContent>
 							</Card>
 
@@ -280,9 +321,22 @@ export default function MyIPAddress() {
 										</p>
 									</div>
 
+									{ipDetails.connection &&
+										ipDetails.connection.type !==
+											"Unknown" && (
+											<div>
+												<Label className='text-sm font-medium text-gray-500'>
+													Connection Type
+												</Label>
+												<p className='text-lg'>
+													{ipDetails.connection.type}
+												</p>
+											</div>
+										)}
+
 									<div>
 										<Label className='text-sm font-medium text-gray-500'>
-											Connection Type
+											Connection Status
 										</Label>
 										<div className='flex flex-wrap gap-2 mt-1'>
 											{ipDetails.proxy && (
@@ -450,12 +504,12 @@ export default function MyIPAddress() {
 							</div>
 							<div>
 								<h4 className='font-semibold text-gray-900 mb-2'>
-									Dynamic vs Static IP
+									Location Accuracy
 								</h4>
 								<p>
-									Most home users have dynamic IPs that change
-									periodically. Static IPs remain constant and
-									are typically used by businesses.
+									IP geolocation provides approximate location
+									data. Accuracy varies from country-level to
+									city-level depending on your ISP.
 								</p>
 							</div>
 						</div>

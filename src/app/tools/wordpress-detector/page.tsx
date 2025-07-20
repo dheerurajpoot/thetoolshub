@@ -84,125 +84,22 @@ export default function WordPressDetector() {
 		setWpInfo(null);
 
 		try {
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-
-			const isWP = Math.random() > 0.3; // 70% chance it's WordPress
-
-			if (!isWP) {
-				setWpInfo({
-					url: cleanUrl,
-					isWordPress: false,
-					version: "",
-					theme: {
-						name: "",
-						version: "",
-						author: "",
-						description: "",
-						url: "",
-					},
-					plugins: [],
-					server: "",
-					lastUpdated: "",
-				});
-				toast.success(
-					"This site doesn't appear to be using WordPress."
-				);
+			const response = await fetch(
+				`/api/wordpress-detect?url=${encodeURIComponent(cleanUrl)}`
+			);
+			const data = await response.json();
+			if (!response.ok || data.error) {
+				setError(data.error || "Failed to detect WordPress site.");
 				return;
 			}
-
-			const themes = [
-				{
-					name: "Astra",
-					author: "Brainstorm Force",
-					description: "Fast, lightweight & customizable theme",
-				},
-				{
-					name: "OceanWP",
-					author: "OceanWP",
-					description: "Multipurpose WordPress theme",
-				},
-				{
-					name: "GeneratePress",
-					author: "Tom Usborne",
-					description: "Lightweight and fast theme",
-				},
-				{
-					name: "Neve",
-					author: "ThemeIsle",
-					description: "Multipurpose WordPress theme",
-				},
-				{
-					name: "Kadence",
-					author: "Kadence WP",
-					description: "Performance focused theme",
-				},
-				{
-					name: "Twenty Twenty-Four",
-					author: "WordPress.org",
-					description: "Default WordPress theme",
-				},
-			];
-
-			const pluginsList = [
-				{ name: "Yoast SEO", description: "SEO optimization plugin" },
-				{ name: "WooCommerce", description: "E-commerce platform" },
-				{ name: "Contact Form 7", description: "Contact form plugin" },
-				{ name: "Elementor", description: "Page builder plugin" },
-				{ name: "Jetpack", description: "WordPress.com features" },
-				{ name: "WP Rocket", description: "Caching plugin" },
-				{ name: "Akismet", description: "Spam protection" },
-				{ name: "UpdraftPlus", description: "Backup plugin" },
-				{ name: "MonsterInsights", description: "Google Analytics" },
-				{ name: "WP Super Cache", description: "Caching plugin" },
-			];
-
-			const selectedTheme =
-				themes[Math.floor(Math.random() * themes.length)];
-			const numPlugins = Math.floor(Math.random() * 8) + 3;
-			const selectedPlugins = pluginsList
-				.sort(() => 0.5 - Math.random())
-				.slice(0, numPlugins)
-				.map((plugin) => ({
-					...plugin,
-					version: `${Math.floor(Math.random() * 5) + 1}.${Math.floor(
-						Math.random() * 10
-					)}.${Math.floor(Math.random() * 10)}`,
-					active: Math.random() > 0.2,
-				}));
-
-			const mockInfo: WordPressInfo = {
-				url: cleanUrl,
-				isWordPress: true,
-				version: `6.${Math.floor(Math.random() * 4)}.${Math.floor(
-					Math.random() * 10
-				)}`,
-				theme: {
-					...selectedTheme,
-					version: `${Math.floor(Math.random() * 3) + 1}.${Math.floor(
-						Math.random() * 10
-					)}.${Math.floor(Math.random() * 10)}`,
-					url: `https://wordpress.org/themes/${selectedTheme.name
-						.toLowerCase()
-						.replace(/\s+/g, "-")}/`,
-				},
-				plugins: selectedPlugins,
-				server: ["Apache", "Nginx", "LiteSpeed"][
-					Math.floor(Math.random() * 3)
-				],
-				lastUpdated: new Date(
-					Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000
-				)
-					.toISOString()
-					.split("T")[0],
-			};
-
-			setWpInfo(mockInfo);
-			toast("WordPress detected!", {
-				description: `Found WordPress ${mockInfo.version} with ${mockInfo.plugins.length} plugins`,
-			});
+			setWpInfo(data);
+			if (!data.isWordPress) {
+				toast("This site doesn't appear to be using WordPress.");
+			} else {
+				toast.success("WordPress site detected!");
+			}
 		} catch (err) {
-			setError("Failed to analyze the website. Please try again.");
+			setError("Failed to detect WordPress site. Please try again.");
 		} finally {
 			setLoading(false);
 		}

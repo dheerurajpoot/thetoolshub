@@ -232,79 +232,97 @@ export default function PrivacyPolicyGenerator() {
 							</CardHeader>
 							<CardContent className='space-y-4'>
 								<div className='flex flex-col gap-2'>
-									<Checkbox
-										id='user-accounts'
-										checked={formData.hasUserAccounts}
-										onCheckedChange={(checked) =>
-											setFormData({
-												...formData,
-												hasUserAccounts: !!checked,
-											})
-										}
-									/>
-									<Label htmlFor='user-accounts'>
-										User Accounts
-									</Label>
-									<Checkbox
-										id='payments'
-										checked={formData.hasPayments}
-										onCheckedChange={(checked) =>
-											setFormData({
-												...formData,
-												hasPayments: !!checked,
-											})
-										}
-									/>
-									<Label htmlFor='payments'>Payments</Label>
-									<Checkbox
-										id='user-content'
-										checked={formData.hasUserContent}
-										onCheckedChange={(checked) =>
-											setFormData({
-												...formData,
-												hasUserContent: !!checked,
-											})
-										}
-									/>
-									<Label htmlFor='user-content'>
-										User Content
-									</Label>
-									<Checkbox
-										id='third-party-services'
-										checked={formData.hasThirdPartyServices}
-										onCheckedChange={(checked) =>
-											setFormData({
-												...formData,
-												hasThirdPartyServices:
-													!!checked,
-											})
-										}
-									/>
-									<Label htmlFor='third-party-services'>
-										Third-Party Services
-									</Label>
-									<Checkbox
-										id='analytics'
-										checked={formData.hasAnalytics}
-										onCheckedChange={(checked) =>
-											setFormData({
-												...formData,
-												hasAnalytics: !!checked,
-											})
-										}
-									/>
-									<Label htmlFor='analytics'>Analytics</Label>
-									<Checkbox
-										id='cookies'
-										checked={formData.hasCookies}
-										onCheckedChange={(checked) =>
-											setFormData({
-												...formData,
-												hasCookies: !!checked,
-											})
-										}
-									/>
-									<Label htmlFor='cookies'>Cookies</Label>
+									<div className='flex gap-2 my-2'>
+										<Checkbox
+											id='user-accounts'
+											checked={formData.hasUserAccounts}
+											onCheckedChange={(checked) =>
+												setFormData({
+													...formData,
+													hasUserAccounts: !!checked,
+												})
+											}
+										/>
+										<Label htmlFor='user-accounts'>
+											User Accounts
+										</Label>
+									</div>
+									<div className='flex gap-2 my-2'>
+										<Checkbox
+											id='payments'
+											checked={formData.hasPayments}
+											onCheckedChange={(checked) =>
+												setFormData({
+													...formData,
+													hasPayments: !!checked,
+												})
+											}
+										/>
+										<Label htmlFor='payments'>
+											Payments
+										</Label>
+									</div>
+									<div className='flex gap-2 my-2'>
+										<Checkbox
+											id='user-content'
+											checked={formData.hasUserContent}
+											onCheckedChange={(checked) =>
+												setFormData({
+													...formData,
+													hasUserContent: !!checked,
+												})
+											}
+										/>
+										<Label htmlFor='user-content'>
+											User Content
+										</Label>
+									</div>
+									<div className='flex gap-2 my-2'>
+										<Checkbox
+											id='third-party-services'
+											checked={
+												formData.hasThirdPartyServices
+											}
+											onCheckedChange={(checked) =>
+												setFormData({
+													...formData,
+													hasThirdPartyServices:
+														!!checked,
+												})
+											}
+										/>
+										<Label htmlFor='third-party-services'>
+											Third-Party Services
+										</Label>
+									</div>
+									<div className='flex gap-2 my-2'>
+										<Checkbox
+											id='analytics'
+											checked={formData.hasAnalytics}
+											onCheckedChange={(checked) =>
+												setFormData({
+													...formData,
+													hasAnalytics: !!checked,
+												})
+											}
+										/>
+										<Label htmlFor='analytics'>
+											Analytics
+										</Label>
+									</div>
+									<div className='flex gap-2 my-2'>
+										<Checkbox
+											id='cookies'
+											checked={formData.hasCookies}
+											onCheckedChange={(checked) =>
+												setFormData({
+													...formData,
+													hasCookies: !!checked,
+												})
+											}
+										/>
+										<Label htmlFor='cookies'>Cookies</Label>
+									</div>
 								</div>
 							</CardContent>
 						</Card>

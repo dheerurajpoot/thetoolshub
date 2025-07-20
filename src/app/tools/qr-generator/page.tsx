@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { QrCode, Download, Copy } from "lucide-react";
 import { toast } from "sonner";
+import QRCode from "qrcode";
 
 export default function QRGenerator() {
 	const [text, setText] = useState("");
@@ -28,22 +29,80 @@ export default function QRGenerator() {
 	const [qrSize, setQrSize] = useState("256");
 	const [qrColor, setQrColor] = useState("#000000");
 	const [bgColor, setBgColor] = useState("#ffffff");
+	const [wifiSSID, setWifiSSID] = useState("");
+	const [wifiPass, setWifiPass] = useState("");
+	const [wifiSec, setWifiSec] = useState("WPA");
+	const [qrDataUrl, setQrDataUrl] = useState<string>("");
+	const [loading, setLoading] = useState(false);
 
-	const generateQRCode = () => {
-		if (!text.trim()) {
-			toast.error("Please enter some text to generate QR code");
+	const getQRValue = () => {
+		if (qrType === "wifi") {
+			return `WIFI:T:${wifiSec};S:${wifiSSID};P:${wifiPass};;`;
+		}
+		if (qrType === "email") {
+			return `mailto:${text}`;
+		}
+		if (qrType === "phone") {
+			return `tel:${text}`;
+		}
+		if (qrType === "url") {
+			return text.startsWith("http") ? text : `https://${text}`;
+		}
+		return text;
+	};
+
+	const generateQRCode = async () => {
+		const value = getQRValue();
+		if (!value.trim()) {
+			toast.error("Please enter some content to generate QR code");
 			return;
 		}
-		// In a real implementation, you would use a QR code library here
-		toast.success("QR Code Generated");
+		setLoading(true);
+		try {
+			const dataUrl = await QRCode.toDataURL(value, {
+				width: parseInt(qrSize),
+				margin: 2,
+				color: {
+					dark: qrColor,
+					light: bgColor,
+				},
+			});
+			setQrDataUrl(dataUrl);
+			toast.success("QR Code Generated");
+		} catch (err) {
+			toast.error("Failed to generate QR code");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const downloadQR = () => {
-		toast.success("Downloaded");
+		if (!qrDataUrl) {
+			toast.error("No QR code to download");
+			return;
+		}
+		const a = document.createElement("a");
+		a.href = qrDataUrl;
+		a.download = "qr-code.png";
+		a.click();
+		toast.success("Downloaded QR code as PNG");
 	};
 
-	const copyQRLink = () => {
-		toast.success("Copied");
+	const copyQRLink = async () => {
+		if (!qrDataUrl) {
+			toast.error("No QR code to copy");
+			return;
+		}
+		try {
+			const res = await fetch(qrDataUrl);
+			const blob = await res.blob();
+			await navigator.clipboard.write([
+				new window.ClipboardItem({ "image/png": blob }),
+			]);
+			toast.success("QR code image copied to clipboard");
+		} catch {
+			toast.error("Clipboard copy not supported");
+		}
 	};
 
 	return (
@@ -142,12 +201,24 @@ export default function QRGenerator() {
 								)}
 								{qrType === "wifi" && (
 									<div className='space-y-3'>
-										<Input placeholder='Network Name (SSID)' />
+										<Input
+											placeholder='Network Name (SSID)'
+											value={wifiSSID}
+											onChange={(e) =>
+												setWifiSSID(e.target.value)
+											}
+										/>
 										<Input
 											placeholder='Password'
 											type='password'
+											value={wifiPass}
+											onChange={(e) =>
+												setWifiPass(e.target.value)
+											}
 										/>
-										<Select>
+										<Select
+											value={wifiSec}
+											onValueChange={setWifiSec}>
 											<SelectTrigger>
 												<SelectValue placeholder='Security Type' />
 											</SelectTrigger>
@@ -239,9 +310,10 @@ export default function QRGenerator() {
 							<Button
 								onClick={generateQRCode}
 								className='w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700'
-								size='lg'>
+								size='lg'
+								disabled={loading}>
 								<QrCode className='w-4 h-4 mr-2' />
-								Generate QR Code
+								{loading ? "Generating..." : "Generate QR Code"}
 							</Button>
 						</CardContent>
 					</Card>
@@ -264,13 +336,17 @@ export default function QRGenerator() {
 										minHeight: "300px",
 										minWidth: "300px",
 									}}>
-									{text ? (
+									{qrDataUrl ? (
 										<div className='text-center'>
-											<QrCode
-												className='w-32 h-32 mx-auto mb-4'
-												style={{ color: qrColor }}
+											<img
+												src={qrDataUrl}
+												alt='QR Code'
+												style={{
+													width: qrSize + "px",
+													height: qrSize + "px",
+												}}
 											/>
-											<p className='text-sm text-gray-600'>
+											<p className='text-sm text-gray-600 mt-2'>
 												QR Code Preview
 											</p>
 										</div>
@@ -287,7 +363,7 @@ export default function QRGenerator() {
 							</div>
 
 							{/* Action Buttons */}
-							{text && (
+							{qrDataUrl && (
 								<div className='space-y-3'>
 									<Button
 										onClick={downloadQR}
@@ -301,7 +377,7 @@ export default function QRGenerator() {
 										className='w-full bg-transparent'
 										variant='outline'>
 										<Copy className='w-4 h-4 mr-2' />
-										Copy Link
+										Copy Image
 									</Button>
 								</div>
 							)}
