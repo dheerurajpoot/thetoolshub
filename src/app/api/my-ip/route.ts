@@ -1,5 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
 
+interface IPApiResponse {
+	ip?: string;
+	query?: string;
+	type?: string;
+	version?: string;
+	country_name?: string;
+	country?: string;
+	region_name?: string;
+	region?: string;
+	city?: string;
+	latitude?: number;
+	longitude?: number;
+	org?: string;
+	isp?: string;
+	asn?: string;
+	timezone?: string;
+	continent_name?: string;
+	continent?: string;
+	country_code?: string;
+	region_code?: string;
+	zip?: string;
+	connection?: { type?: string };
+	[key: string]: any;
+}
+
+interface IPInfo {
+	ip: string;
+	type: string;
+	country: string;
+	region: string;
+	city: string;
+	latitude: number;
+	longitude: number;
+	timezone: string;
+	isp: string;
+	organization: string;
+	asn: string;
+	continent?: string;
+	countryCode?: string;
+	regionCode?: string;
+	zip?: string;
+	connection?: {
+		type: string;
+		isp: string;
+	};
+}
+
 export async function GET(request: NextRequest) {
 	try {
 		// Get the client's IP address with better detection
@@ -48,7 +95,7 @@ export async function GET(request: NextRequest) {
 						console.log(`Got real IP from ipify: ${clientIP}`);
 					}
 				}
-			} catch (ipErr) {
+			} catch {
 				console.warn(
 					"Failed to get real IP from ipify, trying alternative"
 				);
@@ -68,7 +115,7 @@ export async function GET(request: NextRequest) {
 							);
 						}
 					}
-				} catch (altErr) {
+				} catch {
 					console.warn(
 						"Failed to get real IP from alternative service"
 					);
@@ -97,7 +144,7 @@ export async function GET(request: NextRequest) {
 			},
 		];
 
-		let ipInfo: any = null;
+		let ipInfo: IPInfo | null = null;
 		let lastError: string = "";
 
 		for (const api of ipApis) {
@@ -123,7 +170,7 @@ export async function GET(request: NextRequest) {
 					);
 				}
 
-				const data = await response.json();
+				const data: IPApiResponse = await response.json();
 
 				// Check if we got valid data
 				if (data.ip || data.query || data.ipAddress) {
@@ -134,23 +181,19 @@ export async function GET(request: NextRequest) {
 							data.type ||
 							data.version ||
 							(data.ip?.includes(":") ? "IPv6" : "IPv4"),
-						country:
-							data.country_name ||
-							data.country ||
-							data.countryName,
-						region:
-							data.region_name || data.region || data.regionName,
-						city: data.city || data.cityName,
-						latitude: data.latitude || data.lat,
-						longitude: data.longitude || data.lon || data.lng,
-						timezone: data.timezone || data.time_zone,
-						isp: data.org || data.isp || data.ispName,
+						country: data.country_name || data.country || "Unknown",
+						region: data.region_name || data.region || "Unknown",
+						city: data.city || data.cityName || "Unknown",
+						latitude: data.latitude || data.lat || 0,
+						longitude: data.longitude || data.lon || data.lng || 0,
+						timezone: data.timezone || data.time_zone || "UTC",
+						isp: data.org || data.isp || data.ispName || "Unknown",
 						organization:
 							data.org ||
 							data.organization ||
 							data.isp ||
 							"Unknown",
-						asn: data.asn || data.as,
+						asn: data.asn || data.as || "Unknown",
 						continent:
 							data.continent_name ||
 							data.continent ||

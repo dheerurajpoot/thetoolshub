@@ -1,5 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 
+interface ExchangeRateApiResponse {
+	rates: Record<string, number>;
+	base: string;
+	date: string;
+}
+interface OpenErApiResponse {
+	rates: Record<string, number>;
+	base_code: string;
+	time_last_update_utc: string;
+}
+interface FrankfurterApiResponse {
+	rates: Record<string, number>;
+	base: string;
+	date: string;
+}
+
+type ExchangeData = {
+	rate: number;
+	base: string;
+	target: string;
+	date: string;
+	lastUpdated: string;
+};
+
 export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);
 	const from = searchParams.get("from");
@@ -33,7 +57,7 @@ export async function GET(request: NextRequest) {
 			},
 		];
 
-		let exchangeData: any = null;
+		let exchangeData: ExchangeData | null = null;
 		let lastError: string = "";
 
 		for (const api of apis) {
@@ -60,10 +84,8 @@ export async function GET(request: NextRequest) {
 					);
 				}
 
-				const data = await response.json();
-
-				// Parse different API response formats
 				if (api.name === "exchangerate-api.com") {
+					const data: ExchangeRateApiResponse = await response.json();
 					if (data.rates && data.rates[to]) {
 						exchangeData = {
 							rate: data.rates[to],
@@ -75,6 +97,7 @@ export async function GET(request: NextRequest) {
 						break;
 					}
 				} else if (api.name === "open.er-api.com") {
+					const data: OpenErApiResponse = await response.json();
 					if (data.rates && data.rates[to]) {
 						exchangeData = {
 							rate: data.rates[to],
@@ -86,6 +109,7 @@ export async function GET(request: NextRequest) {
 						break;
 					}
 				} else if (api.name === "frankfurter.app") {
+					const data: FrankfurterApiResponse = await response.json();
 					if (data.rates && data.rates[to]) {
 						exchangeData = {
 							rate: data.rates[to],
@@ -115,7 +139,7 @@ export async function GET(request: NextRequest) {
 		}
 
 		// Calculate converted amount if provided
-		let convertedAmount = null;
+		let convertedAmount: number | null = null;
 		if (amount) {
 			const amountNum = parseFloat(amount);
 			if (!isNaN(amountNum)) {

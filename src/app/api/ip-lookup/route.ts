@@ -1,5 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 
+interface DNSAnswer {
+	name: string;
+	type: number;
+	TTL: number;
+	data: string;
+}
+interface DNSResponse {
+	Status: number;
+	Answer?: DNSAnswer[];
+}
+interface IPApiResponse {
+	ip?: string;
+	query?: string;
+	country_name?: string;
+	country?: string;
+	region_name?: string;
+	region?: string;
+	city?: string;
+	latitude?: number;
+	longitude?: number;
+	org?: string;
+	isp?: string;
+	asn?: string;
+	timezone?: string;
+	connection?: { type?: string };
+	[key: string]: any;
+}
+
+interface IPInfo {
+	ip: string;
+	country: string;
+	region: string;
+	city: string;
+	latitude: number;
+	longitude: number;
+	isp: string;
+	asn: string;
+	timezone: string;
+	hosting: string;
+}
+
 export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);
 	let domain = searchParams.get("domain");
@@ -40,7 +81,7 @@ export async function GET(request: NextRequest) {
 			throw new Error("Failed to resolve domain");
 		}
 
-		const dnsData = await dnsResponse.json();
+		const dnsData: DNSResponse = await dnsResponse.json();
 
 		if (
 			dnsData.Status !== 0 ||
@@ -58,7 +99,7 @@ export async function GET(request: NextRequest) {
 			`https://ipapi.co/${ipAddress}/json/`,
 		];
 
-		let ipInfo: any = null;
+		let ipInfo: IPInfo | null = null;
 		let lastError: string = "";
 
 		for (const apiUrl of ipApis) {
@@ -78,20 +119,20 @@ export async function GET(request: NextRequest) {
 					);
 				}
 
-				const data = await response.json();
+				const data: IPApiResponse = await response.json();
 
 				if (data.ip || data.query) {
 					// ipapi.com format
 					ipInfo = {
-						ip: data.ip || data.query,
-						country: data.country_name || data.country,
-						region: data.region_name || data.region,
-						city: data.city,
-						latitude: data.latitude,
-						longitude: data.longitude,
-						isp: data.org || data.isp,
-						asn: data.asn,
-						timezone: data.timezone,
+						ip: data.ip || data.query || ipAddress,
+						country: data.country_name || data.country || "Unknown",
+						region: data.region_name || data.region || "Unknown",
+						city: data.city || "Unknown",
+						latitude: data.latitude || 0,
+						longitude: data.longitude || 0,
+						isp: data.org || data.isp || "Unknown",
+						asn: data.asn || "Unknown",
+						timezone: data.timezone || "UTC",
 						hosting: data.org || "Unknown",
 					};
 					break;
@@ -136,7 +177,7 @@ export async function GET(request: NextRequest) {
 					serverType = serverHeader;
 				}
 			}
-		} catch (serverErr) {
+		} catch {
 			// Server detection failed, keep default
 		}
 
@@ -160,7 +201,7 @@ export async function GET(request: NextRequest) {
 			timezone: ipInfo.timezone || "UTC",
 			hostingProvider: ipInfo.hosting || "Unknown",
 			serverType: serverType,
-			dnsRecords: dnsData.Answer.map((record: any) => ({
+			dnsRecords: dnsData.Answer.map((record: DNSAnswer) => ({
 				type: record.type,
 				data: record.data,
 				ttl: record.TTL,

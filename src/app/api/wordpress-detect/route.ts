@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
 		}
 
 		// Detect theme from HTML
-		let theme = {
+		const theme = {
 			name: "",
 			version: "",
 			author: "",
