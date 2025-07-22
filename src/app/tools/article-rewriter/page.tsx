@@ -1172,6 +1172,7 @@ export default function ArticleRewriter() {
 	const clearAll = () => {
 		setOriginalText("");
 		setRewrittenText("");
+		toast.success("All text cleared");
 	};
 
 	const getWordCount = (text: string) => {
