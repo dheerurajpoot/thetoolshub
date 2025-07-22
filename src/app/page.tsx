@@ -16,7 +16,6 @@ import {
 	User,
 	Repeat,
 	MessageSquare,
-	Eye,
 	Lock,
 	Database,
 	Globe,
@@ -29,8 +28,6 @@ import {
 	Calendar,
 	DollarSign,
 	MapIcon as Sitemap,
-	Camera,
-	FileImage,
 	ArrowUpDown,
 	ImageIcon,
 } from "lucide-react";
@@ -255,12 +252,12 @@ const allTools = [
 		category: "Text",
 		href: "/tools/article-rewriter",
 	},
-	{
-		name: "Plagiarism Checker",
-		icon: Eye,
-		category: "Text",
-		href: "/tools/plagiarism-checker",
-	},
+	// {
+	// 	name: "Plagiarism Checker",
+	// 	icon: Eye,
+	// 	category: "Text",
+	// 	href: "/tools/plagiarism-checker",
+	// },
 	{
 		name: "Case Converter",
 		icon: Type,

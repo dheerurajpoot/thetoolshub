@@ -41,9 +41,7 @@ interface DomainAuthority {
 export default function DomainAuthorityChecker() {
 	const [domain, setDomain] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [authorityData, setAuthorityData] = useState<DomainAuthority | null>(
-		null
-	);
+	const [authorityData, setAuthorityData] = useState<any>(null);
 	const [error, setError] = useState("");
 
 	const validateDomain = (domain: string) => {
@@ -53,16 +51,16 @@ export default function DomainAuthorityChecker() {
 	};
 
 	const getScoreColor = (score: number) => {
-		if (score >= 70) return "text-green-600";
-		if (score >= 50) return "text-yellow-600";
-		if (score >= 30) return "text-orange-600";
+		if (score >= 7) return "text-green-600";
+		if (score >= 5) return "text-yellow-600";
+		if (score >= 3) return "text-orange-600";
 		return "text-red-600";
 	};
 
 	const getScoreLabel = (score: number) => {
-		if (score >= 70) return "Excellent";
-		if (score >= 50) return "Good";
-		if (score >= 30) return "Average";
+		if (score >= 7) return "Excellent";
+		if (score >= 5) return "Good";
+		if (score >= 3) return "Average";
 		return "Poor";
 	};
 
@@ -88,30 +86,17 @@ export default function DomainAuthorityChecker() {
 		setAuthorityData(null);
 
 		try {
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 2500));
-
-			// Generate realistic mock data based on domain
-			const baseScore = Math.floor(Math.random() * 100);
-
-			const mockData: DomainAuthority = {
-				domain: cleanDomain,
-				domainAuthority: baseScore,
-				pageAuthority: Math.max(
-					10,
-					baseScore + Math.floor(Math.random() * 20) - 10
-				),
-				spamScore: Math.floor(Math.random() * 30),
-				linkingDomains: Math.floor(Math.random() * 10000) + 100,
-				totalBacklinks: Math.floor(Math.random() * 100000) + 1000,
-				organicKeywords: Math.floor(Math.random() * 50000) + 500,
-				organicTraffic: Math.floor(Math.random() * 1000000) + 1000,
-				lastUpdated: new Date().toISOString().split("T")[0],
-				trustFlow: Math.floor(Math.random() * 100),
-				citationFlow: Math.floor(Math.random() * 100),
-			};
-
-			setAuthorityData(mockData);
+			const res = await fetch(
+				`/api/domain-authority?domain=${encodeURIComponent(
+					cleanDomain
+				)}`
+			);
+			const data = await res.json();
+			if (!res.ok) {
+				setError(data.error || "Failed to fetch domain authority");
+				return;
+			}
+			setAuthorityData(data);
 			toast("Domain authority checked!", {
 				description: `Analysis complete for ${cleanDomain}`,
 			});
@@ -201,13 +186,13 @@ export default function DomainAuthorityChecker() {
 									<div className='text-center'>
 										<div
 											className={`text-4xl font-bold ${getScoreColor(
-												authorityData.domainAuthority
+												authorityData.page_rank_integer
 											)}`}>
-											{authorityData.domainAuthority}
+											{authorityData.page_rank_integer}
 										</div>
 										<Progress
 											value={
-												authorityData.domainAuthority
+												authorityData.page_rank_integer
 											}
 											className='mt-2'
 										/>
@@ -215,7 +200,7 @@ export default function DomainAuthorityChecker() {
 											variant='secondary'
 											className='mt-2'>
 											{getScoreLabel(
-												authorityData.domainAuthority
+												authorityData.page_rank_integer
 											)}
 										</Badge>
 									</div>
@@ -235,19 +220,21 @@ export default function DomainAuthorityChecker() {
 									<div className='text-center'>
 										<div
 											className={`text-4xl font-bold ${getScoreColor(
-												authorityData.pageAuthority
+												authorityData.page_rank_integer
 											)}`}>
-											{authorityData.pageAuthority}
+											{authorityData.page_rank_integer}
 										</div>
 										<Progress
-											value={authorityData.pageAuthority}
+											value={
+												authorityData.page_rank_integer
+											}
 											className='mt-2'
 										/>
 										<Badge
 											variant='secondary'
 											className='mt-2'>
 											{getScoreLabel(
-												authorityData.pageAuthority
+												authorityData.page_rank_integer
 											)}
 										</Badge>
 									</div>
@@ -267,29 +254,29 @@ export default function DomainAuthorityChecker() {
 									<div className='text-center'>
 										<div
 											className={`text-4xl font-bold ${
-												authorityData.spamScore > 20
+												authorityData.spam_score > 20
 													? "text-red-600"
-													: authorityData.spamScore >
+													: authorityData.spam_score >
 													  10
 													? "text-yellow-600"
 													: "text-green-600"
 											}`}>
-											{authorityData.spamScore}%
+											{authorityData.spam_score}%
 										</div>
 										<Progress
-											value={authorityData.spamScore}
+											value={authorityData.spam_score}
 											className='mt-2'
 										/>
 										<Badge
 											variant={
-												authorityData.spamScore > 20
+												authorityData.spam_score > 20
 													? "destructive"
 													: "secondary"
 											}
 											className='mt-2'>
-											{authorityData.spamScore > 20
+											{authorityData.spam_score > 20
 												? "High Risk"
-												: authorityData.spamScore > 10
+												: authorityData.spam_score > 10
 												? "Medium Risk"
 												: "Low Risk"}
 										</Badge>
@@ -310,7 +297,7 @@ export default function DomainAuthorityChecker() {
 											Linking Domains
 										</Label>
 										<span className='text-lg font-semibold'>
-											{authorityData.linkingDomains.toLocaleString()}
+											{authorityData.linking_domains}
 										</span>
 									</div>
 
@@ -319,7 +306,7 @@ export default function DomainAuthorityChecker() {
 											Total Backlinks
 										</Label>
 										<span className='text-lg font-semibold'>
-											{authorityData.totalBacklinks.toLocaleString()}
+											{authorityData.total_backlinks}
 										</span>
 									</div>
 
@@ -329,10 +316,10 @@ export default function DomainAuthorityChecker() {
 										</Label>
 										<div className='flex items-center gap-2'>
 											<span className='text-lg font-semibold'>
-												{authorityData.trustFlow}
+												{authorityData.trust_flow}
 											</span>
 											<Progress
-												value={authorityData.trustFlow}
+												value={authorityData.trust_flow}
 												className='w-20'
 											/>
 										</div>
@@ -344,11 +331,11 @@ export default function DomainAuthorityChecker() {
 										</Label>
 										<div className='flex items-center gap-2'>
 											<span className='text-lg font-semibold'>
-												{authorityData.citationFlow}
+												{authorityData.citation_flow}
 											</span>
 											<Progress
 												value={
-													authorityData.citationFlow
+													authorityData.citation_flow
 												}
 												className='w-20'
 											/>
@@ -367,7 +354,7 @@ export default function DomainAuthorityChecker() {
 											Organic Keywords
 										</Label>
 										<span className='text-lg font-semibold'>
-											{authorityData.organicKeywords.toLocaleString()}
+											{authorityData.organic_keywords}
 										</span>
 									</div>
 
@@ -376,7 +363,7 @@ export default function DomainAuthorityChecker() {
 											Organic Traffic
 										</Label>
 										<span className='text-lg font-semibold'>
-											{authorityData.organicTraffic.toLocaleString()}
+											{authorityData.organic_traffic}
 										</span>
 									</div>
 
@@ -386,7 +373,7 @@ export default function DomainAuthorityChecker() {
 										</Label>
 										<span className='text-lg'>
 											{new Date(
-												authorityData.lastUpdated
+												authorityData.last_updated
 											).toLocaleDateString()}
 										</span>
 									</div>
