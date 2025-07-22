@@ -41,7 +41,7 @@ interface DomainAuthority {
 export default function DomainAuthorityChecker() {
 	const [domain, setDomain] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [authorityData, setAuthorityData] = useState<any>(null);
+	const [authorityData, setAuthorityData] = useState<DomainAuthority | null>(null);
 	const [error, setError] = useState("");
 
 	const validateDomain = (domain: string) => {
@@ -186,13 +186,13 @@ export default function DomainAuthorityChecker() {
 									<div className='text-center'>
 										<div
 											className={`text-4xl font-bold ${getScoreColor(
-												authorityData.page_rank_integer
+												authorityData.pageAuthority
 											)}`}>
-											{authorityData.page_rank_integer}
+											{authorityData.pageAuthority}
 										</div>
 										<Progress
 											value={
-												authorityData.page_rank_integer
+												authorityData.pageAuthority
 											}
 											className='mt-2'
 										/>
@@ -200,7 +200,7 @@ export default function DomainAuthorityChecker() {
 											variant='secondary'
 											className='mt-2'>
 											{getScoreLabel(
-												authorityData.page_rank_integer
+												authorityData.pageAuthority
 											)}
 										</Badge>
 									</div>
@@ -220,13 +220,13 @@ export default function DomainAuthorityChecker() {
 									<div className='text-center'>
 										<div
 											className={`text-4xl font-bold ${getScoreColor(
-												authorityData.page_rank_integer
+												authorityData.pageAuthority
 											)}`}>
-											{authorityData.page_rank_integer}
+											{authorityData.pageAuthority}
 										</div>
 										<Progress
 											value={
-												authorityData.page_rank_integer
+												authorityData.pageAuthority
 											}
 											className='mt-2'
 										/>
@@ -234,7 +234,7 @@ export default function DomainAuthorityChecker() {
 											variant='secondary'
 											className='mt-2'>
 											{getScoreLabel(
-												authorityData.page_rank_integer
+												authorityData.pageAuthority
 											)}
 										</Badge>
 									</div>
@@ -254,29 +254,29 @@ export default function DomainAuthorityChecker() {
 									<div className='text-center'>
 										<div
 											className={`text-4xl font-bold ${
-												authorityData.spam_score > 20
+												authorityData.spamScore > 20
 													? "text-red-600"
-													: authorityData.spam_score >
+													: authorityData.spamScore >
 													  10
 													? "text-yellow-600"
 													: "text-green-600"
 											}`}>
-											{authorityData.spam_score}%
+											{authorityData.spamScore}%
 										</div>
 										<Progress
-											value={authorityData.spam_score}
+											value={authorityData.spamScore}
 											className='mt-2'
 										/>
 										<Badge
 											variant={
-												authorityData.spam_score > 20
+												authorityData.spamScore > 20
 													? "destructive"
 													: "secondary"
 											}
 											className='mt-2'>
-											{authorityData.spam_score > 20
+											{authorityData.spamScore > 20
 												? "High Risk"
-												: authorityData.spam_score > 10
+												: authorityData.spamScore > 10
 												? "Medium Risk"
 												: "Low Risk"}
 										</Badge>
@@ -297,7 +297,7 @@ export default function DomainAuthorityChecker() {
 											Linking Domains
 										</Label>
 										<span className='text-lg font-semibold'>
-											{authorityData.linking_domains}
+											{authorityData.linkingDomains}
 										</span>
 									</div>
 
@@ -306,7 +306,7 @@ export default function DomainAuthorityChecker() {
 											Total Backlinks
 										</Label>
 										<span className='text-lg font-semibold'>
-											{authorityData.total_backlinks}
+											{authorityData.totalBacklinks}
 										</span>
 									</div>
 
@@ -316,10 +316,10 @@ export default function DomainAuthorityChecker() {
 										</Label>
 										<div className='flex items-center gap-2'>
 											<span className='text-lg font-semibold'>
-												{authorityData.trust_flow}
+												{authorityData.trustFlow}
 											</span>
 											<Progress
-												value={authorityData.trust_flow}
+												value={authorityData.trustFlow}
 												className='w-20'
 											/>
 										</div>
@@ -331,11 +331,11 @@ export default function DomainAuthorityChecker() {
 										</Label>
 										<div className='flex items-center gap-2'>
 											<span className='text-lg font-semibold'>
-												{authorityData.citation_flow}
+												{authorityData.citationFlow}
 											</span>
 											<Progress
 												value={
-													authorityData.citation_flow
+													authorityData.citationFlow
 												}
 												className='w-20'
 											/>
@@ -354,7 +354,7 @@ export default function DomainAuthorityChecker() {
 											Organic Keywords
 										</Label>
 										<span className='text-lg font-semibold'>
-											{authorityData.organic_keywords}
+											{authorityData.organicKeywords}
 										</span>
 									</div>
 
@@ -363,7 +363,7 @@ export default function DomainAuthorityChecker() {
 											Organic Traffic
 										</Label>
 										<span className='text-lg font-semibold'>
-											{authorityData.organic_traffic}
+											{authorityData.organicTraffic}
 										</span>
 									</div>
 
@@ -373,7 +373,7 @@ export default function DomainAuthorityChecker() {
 										</Label>
 										<span className='text-lg'>
 											{new Date(
-												authorityData.last_updated
+												authorityData.lastUpdated
 											).toLocaleDateString()}
 										</span>
 									</div>
