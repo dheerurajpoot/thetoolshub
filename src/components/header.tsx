@@ -7,7 +7,7 @@ import React, { useState } from "react";
 const navLinks = [
 	{ href: "/about", label: "About" },
 	{ href: "/disclaimer", label: "Disclaimer" },
-	{ href: "/privacy-policy", label: "Privacy Policy" },
+	{ href: "/privacy", label: "Privacy Policy" },
 	{ href: "/terms", label: "Terms of Service" },
 ];
 

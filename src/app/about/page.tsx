@@ -2,6 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Target, Zap, Shield } from "lucide-react";
 import { siteName } from "@/lib/constant";
 
+export const metadata = {
+	title: "About Us | SMM Garden",
+	description:
+		"We're on a mission to provide the most comprehensive collection of free online tools to boost productivity and simplify digital tasks.",
+};
+
 export default function AboutPage() {
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4'>

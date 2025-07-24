@@ -2,6 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Cookie, Settings, Shield, Info } from "lucide-react";
 import { email, siteName } from "@/lib/constant";
 
+export const metadata = {
+	title: "Cookie Policy | SMM Garden",
+	description: "Learn about how we use cookies and similar technologies.",
+};
+
 export default function CookiesPage() {
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4'>

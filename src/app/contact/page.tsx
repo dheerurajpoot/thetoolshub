@@ -6,6 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Clock, MapPin } from "lucide-react";
 import { email, location } from "@/lib/constant";
 
+export const metadata = {
+	title: "Contact Us | SMM Garden",
+	description:
+		"Have a question, suggestion, or need help? We'll love to hear from you!",
+};
+
 export default function ContactPage() {
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4'>

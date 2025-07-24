@@ -2,6 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle, Info, Shield, FileText } from "lucide-react";
 import { email, siteName } from "@/lib/constant";
 
+export const metadata = {
+	title: "Disclaimer | SMM Garden",
+	description:
+		"Important information about the use of our tools and services.",
+};
+
 export default function DisclaimerPage() {
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4'>
@@ -29,8 +35,8 @@ export default function DisclaimerPage() {
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								The information and tools provided by ToolBox
-								Pro are for general informational and utility
+								The information and tools provided by {siteName}{" "}
+								are for general informational and utility
 								purposes only. While we strive to provide
 								accurate and up-to-date tools, we make no
 								representations or warranties of any kind,

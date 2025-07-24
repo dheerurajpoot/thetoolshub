@@ -9,30 +9,30 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "ToolBox Pro - 60+ Free Online Tools",
+	title: "SMM Garden - 60+ Free Online Tools",
 	description:
 		"Boost your productivity with our collection of 60+ powerful, free online tools. From SEO optimization to development utilities, password generators to calculators - all in one place.",
 	keywords:
-		"online tools, free tools, SEO tools, calculators, generators, text tools, image tools, developer tools, password generator, QR code generator",
-	authors: [{ name: "ToolBox Pro Team" }],
-	creator: "ToolBox Pro",
-	publisher: "ToolBox Pro",
+		"online tools, free tools, SEO tools, calculators, generators, text tools, image tools, developer tools, password generator, QR code generator, smmgarden, smmgarden.com, smmgarden.in",
+	authors: [{ name: "SMM Garden Team" }],
+	creator: "SMM Garden",
+	publisher: "SMM Garden",
 	robots: "index, follow",
 	openGraph: {
 		type: "website",
 		locale: "en_US",
-		url: "https://toolboxpro.com",
-		title: "ToolBox Pro - 50+ Free Online Tools",
+		url: "https://www.smmgarden.com",
+		title: "SMM Garden - 60+ Free Online Tools",
 		description:
 			"Boost your productivity with our collection of powerful, free online tools.",
-		siteName: "ToolBox Pro",
+		siteName: "SMM Garden",
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "ToolBox Pro - 50+ Free Online Tools",
+		title: "SMM Garden - 60+ Free Online Tools",
 		description:
 			"Boost your productivity with our collection of powerful, free online tools.",
-		creator: "@toolboxpro",
+		creator: "@smmgarden",
 	},
 };
 
@@ -42,8 +42,11 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang='en'>
-			<body className={inter.className}>
+		<html lang='en' suppressHydrationWarning>
+			<head suppressHydrationWarning>
+				<link rel='icon' href='/favicon.ico' />
+			</head>
+			<body className={inter.className} suppressHydrationWarning>
 				<Header />
 				{children}
 				<Toaster />

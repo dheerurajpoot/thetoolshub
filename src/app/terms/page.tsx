@@ -2,6 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { email, siteName } from "@/lib/constant";
 import { FileText, Scale, AlertTriangle, Users } from "lucide-react";
 
+export const metadata = {
+	title: "Terms of Service | SMM Garden",
+	description: "Please read these terms carefully before using our services.",
+};
+
 export default function TermsPage() {
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4'>

@@ -2,6 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Eye, Lock, Database } from "lucide-react";
 import { email, siteName } from "@/lib/constant";
 
+export const metadata = {
+	title: "Privacy Policy | SMM Garden",
+	description:
+		"Your privacy is our priority. Learn how we protect your data.",
+};
+
 export default function PrivacyPage() {
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4'>
