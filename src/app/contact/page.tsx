@@ -1,7 +1,4 @@
-"use client";
-
 import type React from "react";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Clock, MapPin } from "lucide-react";
 import { email, location } from "@/lib/constant";
