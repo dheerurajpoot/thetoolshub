@@ -44,7 +44,20 @@ export default function RootLayout({
 	return (
 		<html lang='en' suppressHydrationWarning>
 			<head suppressHydrationWarning>
-				<link rel='icon' href='/favicon.ico' />
+				<script
+					async
+					src='https://www.googletagmanager.com/gtag/js?id=AW-329773482'
+				/>
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+						gtag('config', 'AW-329773482');
+					`,
+					}}
+				/>
 			</head>
 			<body className={inter.className} suppressHydrationWarning>
 				<Header />
