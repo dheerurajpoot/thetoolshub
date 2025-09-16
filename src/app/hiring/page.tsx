@@ -327,8 +327,8 @@ export default function HiringPage() {
 								Apply for Telecaller Position
 							</CardTitle>
 							<CardDescription className='text-center'>
-								Fill out the form below and we'll get back to
-								you within 24 hours
+								Fill out the form below and we&apos;ll get back
+								to you within 24 hours
 							</CardDescription>
 						</CardHeader>
 						<CardContent>

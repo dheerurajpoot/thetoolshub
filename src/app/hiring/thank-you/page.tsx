@@ -37,15 +37,16 @@ export default function ThankYouPage() {
 							</h3>
 							<div className='text-sm text-blue-800 space-y-1'>
 								<p>
-									• We'll review your application within 24
-									hours
+									• We&apos;ll review your application within
+									24 hours
 								</p>
 								<p>
-									• If shortlisted, we'll contact you for an
-									interview
+									• If shortlisted, we&apos;ll contact you for
+									an interview
 								</p>
 								<p>
-									• You'll receive updates via email or phone
+									• You&apos;ll receive updates via email or
+									phone
 								</p>
 							</div>
 						</div>
