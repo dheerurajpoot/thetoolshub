@@ -422,21 +422,6 @@ export default function HomePage() {
 						no registration required.
 					</p>
 
-					<script
-						async
-						src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8783459202982334'
-						crossOrigin='anonymous'></script>
-					<ins
-						className='adsbygoogle'
-						style={{ display: "block" }}
-						data-ad-client='ca-pub-8783459202982334'
-						data-ad-slot='6198538182'
-						data-ad-format='auto'
-						data-full-width-responsive='true'></ins>
-					<script>
-						(adsbygoogle = window.adsbygoogle || []).push({});
-					</script>
-
 					{/* Search Bar */}
 					<div className='max-w-md mx-auto mb-8'>
 						<div className='relative'>
