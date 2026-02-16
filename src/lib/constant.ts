@@ -1,5 +1,7 @@
-export const domainName = "https://www.smmgarden.com";
-export const siteName = "SMM Garden";
-export const email = "drexpress90@gmail.com";
-export const phone = "+91 7755089819";
-export const location = "Global - Remote Team";
+export const SITE_URL = 'https://toolhub.deelzo.com'
+export const SITE_NAME = 'ToolHub'
+export const SITE_TITLE = 'ToolHub - Free Online Tools'
+export const SITE_DESCRIPTION = 'Free online tools for various tasks without losing quality. ToolHub is the best tool for your needs.'
+export const SITE_AUTHOR = 'Deelzo'
+export const SITE_EMAIL = 'evtnorg@gmail.com'
+export const SITE_PHONE = '+1 (682)4640435'

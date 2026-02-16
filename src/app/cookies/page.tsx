@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Cookie, Settings, Shield, Info } from "lucide-react";
-import { email, siteName } from "@/lib/constant";
+import { SITE_NAME, SITE_EMAIL } from "@/lib/constant";
 
 export const metadata = {
-	title: "Cookie Policy | SMM Garden",
+	title: `Cookie Policy | ${SITE_NAME}`,
 	description: "Learn about how we use cookies and similar technologies.",
 };
 
@@ -19,7 +19,7 @@ export default function CookiesPage() {
 						Cookie Policy
 					</h1>
 					<p className='text-xl text-gray-600'>
-						Learn about how we use cookies and similar technologies.
+						Learn about how we use cookies and similar technologies on {SITE_NAME}.
 					</p>
 				</div>
 
@@ -41,7 +41,7 @@ export default function CookiesPage() {
 								useful to you.
 							</p>
 							<p className='text-gray-600'>
-								{siteName} uses cookies responsibly and
+								{SITE_NAME} uses cookies responsibly and
 								minimally to enhance your experience while
 								respecting your privacy.
 							</p>
@@ -233,14 +233,14 @@ export default function CookiesPage() {
 							</p>
 							<div className='text-gray-600'>
 								<p>
-									<strong>Email:</strong> {email}
+									<strong>Email:</strong> {SITE_EMAIL}
 								</p>
 								<p>
 									<strong>Subject:</strong> Cookie Policy
 									Inquiry
 								</p>
 								<p>
-									<strong>Last Updated:</strong> July 2025
+									<strong>Last Updated:</strong> Jan 2026
 								</p>
 							</div>
 						</CardContent>

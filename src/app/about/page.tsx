@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Target, Zap, Shield } from "lucide-react";
-import { siteName } from "@/lib/constant";
+import { SITE_NAME, SITE_TITLE } from "@/lib/constant";
 
 export const metadata = {
-	title: "About Us | SMM Garden",
+	title: `About ${SITE_NAME} - ${SITE_TITLE}`,
 	description:
 		"We're on a mission to provide the most comprehensive collection of free online tools to boost productivity and simplify digital tasks.",
 };
@@ -14,7 +14,7 @@ export default function AboutPage() {
 			<div className='container mx-auto max-w-4xl'>
 				<div className='text-center mb-12'>
 					<h1 className='text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
-						About {siteName}
+						About {SITE_NAME}
 					</h1>
 					<p className='text-xl text-gray-600 max-w-2xl mx-auto'>
 						We&apos;re on a mission to provide the most
@@ -57,7 +57,7 @@ export default function AboutPage() {
 
 				<div className='mb-12'>
 					<h2 className='text-3xl font-bold text-center mb-8 text-gray-800'>
-						Why Choose {siteName}?
+						Why Choose {SITE_NAME}?
 					</h2>
 					<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
 						<div className='text-center'>
@@ -106,7 +106,7 @@ export default function AboutPage() {
 					<CardContent>
 						<div className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								{siteName} was born out of frustration with
+								{SITE_NAME} was born out of frustration with
 								scattered, unreliable online tools. As
 								developers and content creators ourselves, we
 								found ourselves constantly searching for
@@ -119,7 +119,7 @@ export default function AboutPage() {
 								platform that offered high-quality, fast, and
 								secure tools without the hassle of ads,
 								registration requirements, or privacy concerns.
-								That&apos;s when {siteName} was created.
+								That&apos;s when {SITE_NAME} was created.
 							</p>
 							<p className='text-gray-600'>
 								Today, we&apos;re proud to serve thousands of

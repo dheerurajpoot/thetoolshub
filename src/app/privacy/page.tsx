@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Eye, Lock, Database } from "lucide-react";
-import { email, siteName } from "@/lib/constant";
+import { SITE_EMAIL, SITE_NAME } from "@/lib/constant";
 
 export const metadata = {
-	title: "Privacy Policy | SMM Garden",
+	title: `Privacy Policy - ${SITE_NAME}`,
 	description:
-		"Your privacy is our priority. Learn how we protect your data.",
+		"Your privacy is our priority. Learn how we protect your data on ${SITE_NAME}.",
 };
 
 export default function PrivacyPage() {
@@ -35,7 +35,7 @@ export default function PrivacyPage() {
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								{siteName} is designed with privacy in mind. We
+								{SITE_NAME} is designed with privacy in mind. We
 								collect minimal information to provide our
 								services:
 							</p>
@@ -198,10 +198,10 @@ export default function PrivacyPage() {
 							</p>
 							<div className='text-gray-600'>
 								<p>
-									<strong>Email:</strong> {email}
+									<strong>Email:</strong> {SITE_EMAIL}
 								</p>
 								<p>
-									<strong>Last Updated:</strong> July 2025
+									<strong>Last Updated:</strong> Jan 2026
 								</p>
 							</div>
 						</CardContent>

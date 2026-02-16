@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle, Info, Shield, FileText } from "lucide-react";
-import { email, siteName } from "@/lib/constant";
+import { SITE_EMAIL, SITE_NAME } from "@/lib/constant";
 
 export const metadata = {
-	title: "Disclaimer | SMM Garden",
+	title: `Disclaimer - ${SITE_NAME}`,
 	description:
-		"Important information about the use of our tools and services.",
+		"Important information about the use of our tools and services on ${SITE_NAME}.",
 };
 
 export default function DisclaimerPage() {
@@ -35,7 +35,7 @@ export default function DisclaimerPage() {
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								The information and tools provided by {siteName}{" "}
+								The information and tools provided by {SITE_NAME}{" "}
 								are for general informational and utility
 								purposes only. While we strive to provide
 								accurate and up-to-date tools, we make no
@@ -171,7 +171,7 @@ export default function DisclaimerPage() {
 							<p className='text-gray-600 mb-4'>
 								Our website may contain links to third-party
 								websites or services that are not owned or
-								controlled by {siteName}. We have no control
+								controlled by {SITE_NAME}. We have no control
 								over, and assume no responsibility for:
 							</p>
 							<ul className='text-gray-600 space-y-2'>
@@ -194,7 +194,7 @@ export default function DisclaimerPage() {
 								</li>
 							</ul>
 							<p className='text-gray-600 mt-4'>
-								You acknowledge and agree that {siteName} shall
+								You acknowledge and agree that {SITE_NAME} shall
 								not be responsible or liable for any damage or
 								loss caused by your use of any third-party
 								content, goods, or services.
@@ -209,7 +209,7 @@ export default function DisclaimerPage() {
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
 								To the fullest extent permitted by applicable
-								law, {siteName} shall not be liable for any
+								law, {SITE_NAME} shall not be liable for any
 								indirect, incidental, special, consequential, or
 								punitive damages, including without limitation:
 							</p>
@@ -243,14 +243,14 @@ export default function DisclaimerPage() {
 							</p>
 							<div className='text-gray-600'>
 								<p>
-									<strong>Last Updated:</strong> July 19, 2025
+									<strong>Last Updated:</strong> Jan 19, 2026
 								</p>
 								<p>
-									<strong>Effective Date:</strong> July 19,
-									2025
+									<strong>Effective Date:</strong> Jan 19,
+									2026
 								</p>
 								<p>
-									<strong>Contact:</strong> {email}
+									<strong>Contact:</strong> {SITE_EMAIL}
 								</p>
 							</div>
 						</CardContent>

@@ -410,31 +410,31 @@ export default function HomePage() {
 	}, [filteredTools]);
 
 	return (
-		<div className='min-h-screen bg-gray-50'>
+		<div className='min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
 			{/* Hero Section */}
-			<section className='py-12 px-4 bg-white'>
+			<section className='py-16 px-4 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white'>
 				<div className='container mx-auto text-center'>
-					<h1 className='text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent'>
+					<h1 className='text-4xl md:text-6xl font-bold mb-4'>
 						Free Online Tools
 					</h1>
-					<p className='text-lg text-gray-600 mb-8 max-w-2xl mx-auto'>
+					<p className='text-xl text-blue-100 mb-10 max-w-3xl mx-auto'>
 						65+ powerful tools to boost your productivity. All free,
 						no registration required.
 					</p>
 
 					{/* Search Bar */}
-					<div className='max-w-md mx-auto mb-8'>
+					<div className='max-w-lg mx-auto mb-10'>
 						<div className='relative'>
-							<Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5' />
+							<Search className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5' />
 							<Input
 								placeholder='Search tools...'
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
-								className='pl-10 py-3 border-gray-300 focus:border-blue-500 rounded-lg'
+								className='pl-12 py-4 border-0 text-lg shadow-lg rounded-xl focus:ring-2 focus:ring-blue-300'
 							/>
 						</div>
 						{searchQuery && (
-							<div className='mt-2 text-sm text-gray-600'>
+							<div className='mt-3 text-blue-100'>
 								Found {filteredTools.length} tool
 								{filteredTools.length !== 1 ? "s" : ""} matching
 								&quot;{searchQuery}&quot;
@@ -443,15 +443,15 @@ export default function HomePage() {
 					</div>
 
 					{/* Category Filters */}
-					<div className='flex flex-wrap justify-center gap-2 mb-8'>
+					<div className='flex flex-wrap justify-center gap-3 mb-8'>
 						{categories.map((cat) => (
 							<button
 								key={cat}
 								onClick={() => setSelectedCategory(cat)}
-								className={`px-4 py-2 rounded-full border transition-colors text-sm ${
+								className={`px-5 py-2.5 rounded-full transition-all text-base font-medium ${
 									selectedCategory === cat
-										? "border-blue-500 bg-blue-50 text-blue-600"
-										: "border-gray-300 hover:border-blue-500 hover:bg-blue-50"
+										? "bg-white text-blue-600 shadow-lg"
+										: "bg-blue-500/20 hover:bg-blue-500/30 text-white"
 								}`}>
 								{cat}
 								{cat !== "All" && (
@@ -551,13 +551,13 @@ export default function HomePage() {
 																href={
 																	tool.href
 																}>
-																<div className='group bg-white rounded-lg p-4 hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-blue-300'>
-																	<div className='flex flex-col items-center text-center space-y-3'>
-																		<div className='w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform'>
-																			<IconComponent className='w-6 h-6 text-blue-600' />
+																<div className='group bg-white rounded-xl p-5 hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-blue-300 transform hover:-translate-y-1'>
+																	<div className='flex flex-col items-center text-center space-y-4'>
+																		<div className='w-14 h-14 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-md'>
+																			<IconComponent className='w-7 h-7 text-blue-600' />
 																		</div>
 																		<div>
-																			<h3 className='font-medium text-gray-800 text-sm leading-tight'>
+																			<h3 className='font-semibold text-gray-800 text-sm leading-tight group-hover:text-blue-600 transition-colors'>
 																				{
 																					tool.name
 																				}

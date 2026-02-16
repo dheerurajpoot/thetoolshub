@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { email, siteName } from "@/lib/constant";
+import { SITE_EMAIL, SITE_NAME } from "@/lib/constant";
 import { FileText, Scale, AlertTriangle, Users } from "lucide-react";
 
 export const metadata = {
-	title: "Terms of Service | SMM Garden",
+	title: `Terms of Service - ${SITE_NAME}`,
 	description: "Please read these terms carefully before using our services.",
 };
 
@@ -19,7 +19,7 @@ export default function TermsPage() {
 						Terms of Service
 					</h1>
 					<p className='text-xl text-gray-600'>
-						Please read these terms carefully before using our
+						Please read these terms carefully before using our services on {SITE_NAME}.
 						services.
 					</p>
 				</div>
@@ -34,7 +34,7 @@ export default function TermsPage() {
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								By accessing and using {siteName} (&quot;the
+								By accessing and using {SITE_NAME} (&quot;the
 								Service&quot;), you accept and agree to be bound
 								by the terms and provisions of this agreement.
 								If you do not agree to abide by the above,
@@ -101,8 +101,8 @@ export default function TermsPage() {
 						</CardHeader>
 						<CardContent className='prose prose-gray max-w-none'>
 							<p className='text-gray-600 mb-4'>
-								The materials on {siteName} are provided on an
-								&apos;as is&apos; basis. {siteName} makes no
+								The materials on {SITE_NAME} are provided on an
+								&apos;as is&apos; basis. {SITE_NAME} makes no
 								warranties, expressed or implied, and hereby
 								disclaims and negates all other warranties
 								including without limitation, implied warranties
@@ -112,7 +112,7 @@ export default function TermsPage() {
 								rights.
 							</p>
 							<p className='text-gray-600'>
-								Further, {siteName} does not warrant or make any
+								Further, {SITE_NAME} does not warrant or make any
 								representations concerning the accuracy, likely
 								results, or reliability of the use of the
 								materials on its website or otherwise relating
@@ -127,7 +127,7 @@ export default function TermsPage() {
 							<CardHeader>
 								<CardTitle>Limitations</CardTitle>
 							</CardHeader>
-							<CardContent>
+							<CardContent>	
 								<p className='text-gray-600 mb-3'>
 									In no event shall ToolBox Pro or its
 									suppliers be liable for any damages
@@ -148,7 +148,7 @@ export default function TermsPage() {
 							</CardHeader>
 							<CardContent>
 								<p className='text-gray-600 mb-3'>
-									The materials on {siteName} may include
+									The materials on {SITE_NAME} may include
 									technical, typographical, or photographic
 									errors:
 								</p>
@@ -217,13 +217,13 @@ export default function TermsPage() {
 							</p>
 							<div className='text-gray-600'>
 								<p>
-									<strong>Email:</strong> {email}
+									<strong>Email:</strong> {SITE_EMAIL}
 								</p>
 								<p>
-									<strong>Last Updated:</strong> July 2025
+									<strong>Last Updated:</strong> Jan 2026
 								</p>
 								<p>
-									<strong>Effective Date:</strong> July 1,
+									<strong>Effective Date:</strong> Jan 1,
 									2025
 								</p>
 							</div>
